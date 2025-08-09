@@ -141,7 +141,7 @@ class CarouselWrapper {
 					.attr("data-carousel-selected", navItemIdx === 0 ? "true" : "false")
 					.appendTo($imageContainer);
 
-				this.addImageMagnifierOnHover($img);
+				this.addImageMagnifierOnHover($img, imageTimeoutKey);
 
 				const $navItem = $("<div>")
 					.addClass("nav-item")
@@ -279,7 +279,7 @@ class CarouselWrapper {
 		});
 	}
 
-	addImageMagnifierOnHover($zoomerTarget) {
+	addImageMagnifierOnHover($zoomerTarget, imageTimeoutKey) {
 		const $imageContainer = $zoomerTarget.closest(".carousel-image-container");
 
 		$zoomerTarget.on("mousemove", (e) => {
