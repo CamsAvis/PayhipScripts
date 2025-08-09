@@ -344,14 +344,17 @@ let carouselTimeoutsDict = {
 }
 
 const addCarousels = () => {
-	$("p strong em u").each(function () {
-		if ($(this).html().trim() === "%%CAROUSEL_START%%") {
-			initCarousel($(this));
+	$("product-description :contains('%%CAROUSEL_START%%')").each(function () {
+		if(!$(this).html().includes("%%CAROUSEL_START%%")) {
+			return;
 		}
-	})
+
+		const $closestParent = $(this).parentsUntil(".product-description").last();
+		initCarousel($closestParent);
+	});
 }
 
-const isCarouselEnd = ($item) => $item.find("strong em u") .text().trim().toUpperCase() === "%%CAROUSEL_END%%";
+const isCarouselEnd = ($item) => $item.text().trim() === "%%CAROUSEL_END%%";
 
 function initCarousel($start) {
 	$start.html("").addClass("custom-carousel");
