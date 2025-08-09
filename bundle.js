@@ -136,8 +136,8 @@ class CarouselWrapper {
 				return;
 			}
 
-			const autoAdvance = true;
-			const autoAdvanceTimeoutSeconds = 10;
+			let autoAdvance = true;
+			let autoAdvanceTimeoutSeconds = 10;
 
 			let match;
 			const regex = /(?<key>[a-z0-9-]+)=(?<value>[a-z0-9-]+)/gi
