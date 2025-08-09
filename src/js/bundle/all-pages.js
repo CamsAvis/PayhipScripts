@@ -107,9 +107,4 @@ window.addEventListener('DOMContentLoaded', () => {
       .html(`<span class="material-symbols-outlined">arrow_upward_alt</span>`)
       .addClass("back-to-top-button")
       .appendTo(document.body);
-
-    // Add carousels
-    if (document.body.id === "page-product") {
-      addCarousels();
-    }
   });
