@@ -357,7 +357,6 @@ class CarouselWrapper {
 
 	addImageMagnifierOnHover($zoomerTarget) {
 		$zoomerTarget
-			.attr("data-carousel-zoomer-hovered", "false")
 			.on("mousemove", (e) => {
 				const isHovered = $zoomerTarget
 					.closest('[data-carousel-zoomer-hovered]')
