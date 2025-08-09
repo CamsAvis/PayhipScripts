@@ -42,6 +42,22 @@ class CarouselWrapper {
 
 			this.initCarousel($element);
 		});
+
+		// pause auto rotations when off screen
+		$(window).on("resize scroll", () => {
+			$(".custom-carousel").each((_, el) => {
+				const $el = $(el);
+				const key = $el.attr("data-timeout-key");
+
+				const currentTimeout = this.carouselTimeoutsMap[key]?.timeout;
+				const inView = this.isInViewport($el);
+				if(inView && !currentTimeout) {
+					this.resumeTimeout(key);
+				} else if(!inView) {
+					this.pauseTimeout(key);
+				}
+				})
+		})
 	}
 
 	isCarouselEnd($item) {
@@ -62,19 +78,6 @@ class CarouselWrapper {
 	initCarousel($root) {
 		let imageTimeoutKey = crypto.randomUUID();
 		
-		// pause auto rotations when off screen
-		$(window).on("resize scroll", (_,el) => {
-			const $el = $(el);
-
-			const currentTimeout = this.carouselTimeoutsMap[imageTimeoutKey].timeout;
-			const inView = this.isInViewport($el);
-			if(inView && !currentTimeout) {
-				this.resumeTimeout(imageTimeoutKey);
-			} else if(!inView) {
-				this.pauseTimeout(imageTimeoutKey);
-			}
-		})
-
 		// Init carousel stuff
 		$root.html("").addClass("custom-carousel");
 		const $navGroup = $("<div>").addClass("carousel-nav-group");
@@ -90,6 +93,7 @@ class CarouselWrapper {
 				const currentIndex = navItemIdx;
 
 				$img.addClass("zoom-target")
+					.attr("data-timeout-key", imageTimeoutKey)
 					.attr("data-carousel-selected", navItemIdx === 0 ? "true" : "false")
 					.appendTo($root);
 
