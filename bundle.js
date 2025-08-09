@@ -168,7 +168,7 @@ class CarouselWrapper {
 				} else if(!inView) {
 					this.pauseTimeout(key);
 				}
-				})
+			})
 		})
 	}
 
@@ -191,7 +191,10 @@ class CarouselWrapper {
 		let imageTimeoutKey = crypto.randomUUID();
 		
 		// Init carousel stuff
-		$root.html("").addClass("custom-carousel");
+		$root.html("")
+			.addClass("custom-carousel")
+			.attr("data-timeout-key", imageTimeoutKey)
+
 		const $navGroup = $("<div>").addClass("carousel-nav-group");
 
 		// Gather all children between start and end markers
@@ -205,7 +208,6 @@ class CarouselWrapper {
 				const currentIndex = navItemIdx;
 
 				$img.addClass("zoom-target")
-					.attr("data-timeout-key", imageTimeoutKey)
 					.attr("data-carousel-selected", navItemIdx === 0 ? "true" : "false")
 					.appendTo($root);
 
