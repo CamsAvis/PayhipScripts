@@ -157,6 +157,9 @@ class CarouselWrapper {
 
 		// add the nav
 		$root.append($navGroup);
+
+		// start
+		this.updateCarousel(imageTimeoutKey, 0);
 	}
 
 	updateCarousel(imageTimeoutKey, newIdx) {
