@@ -38,10 +38,6 @@
 	background-color: rgba(12,12,12,0.2);
 }
 
-.carousel-image-container:hover {
-	background-color: rgba(12,12,12,0.5);
-}
-
 .custom-carousel img {
   position: absolute;
   top: 0;
@@ -81,10 +77,10 @@
   color: white;
   top: 50%;
 	cursor: pointer;
-	
-	&:hover {
-		background-color: rgba(12,12,12,0.5);
-	}
+}
+
+.carousel-navigator-arrow:hover {
+	background-color: rgba(12,12,12,0.5);
 }
 
 .material-symbols-outlined {
