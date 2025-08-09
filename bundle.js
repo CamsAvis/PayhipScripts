@@ -126,8 +126,7 @@ class CarouselTimeout {
 class CarouselWrapper {
 	constructor() { 
 		this.carouselTimeoutsMap = { };
-		this.autoAdvance = true;
-		this.autoAdvanceTimeoutSeconds = 10;
+		this.$root = undefined;
 	}
 
 	initCarousels() {
@@ -137,6 +136,9 @@ class CarouselWrapper {
 				return;
 			}
 
+			const autoAdvance = true;
+			const autoAdvanceTimeoutSeconds = 10;
+
 			let match;
 			const regex = /(?<key>[a-z0-9-]+)=(?<value>[a-z0-9-]+)/gi
 			while ((match = regex.exec($element.text())) !== null) {
@@ -144,15 +146,24 @@ class CarouselWrapper {
 
 				switch(key) {
 					case 'auto-advance':
-						this.autoAdvance = value === "true";
+						autoAdvance = value === "true";
 						break;
 					case 'auto-advance-speed-s':
-						this.autoAdvanceTimeoutSeconds = parseInt(value);
+						try { 
+							autoAdvanceTimeoutSeconds = parseInt(value); 
+						} catch {
+							console.log("inputted value for auto-advance-speed-s was invalid");
+						}
+						
 						break;
 				}
 			}
 
-			this.initCarousel($element);
+			this.initCarousel(
+				$element,
+				autoAdvance,
+				autoAdvanceTimeoutSeconds
+			);
 		});
 
 		// pause auto rotations when off screen
@@ -172,10 +183,7 @@ class CarouselWrapper {
 		})
 	}
 
-	isCarouselEnd($item) {
-		// ok
-		return $item.text().trim() === "%%CAROUSEL_END%%";
-	}
+	isCarouselEnd = ($item) => $item.text().trim() === "%%CAROUSEL_END%%";
 
 	isInViewport($element) {
     var elementTop = $element.offset().top;
@@ -187,13 +195,15 @@ class CarouselWrapper {
     return elementBottom > viewportTop && elementTop < viewportBottom;
 };
 
-	initCarousel($root) {
+	initCarousel($root, autoAdvance, autoAdvanceTimeoutSeconds) {
 		let imageTimeoutKey = crypto.randomUUID();
 		
 		// Init carousel stuff
 		$root.html("")
 			.addClass("custom-carousel")
-			.attr("data-timeout-key", imageTimeoutKey)
+			.id(imageTimeoutKey)
+			.attr("data-auto-advance", autoAdvance.toString())
+			.attr("data-auto-advance-timeout-s", autoAdvanceTimeoutSeconds.toString())
 
 		const $navGroup = $("<div>").addClass("carousel-nav-group");
 
@@ -271,7 +281,11 @@ class CarouselWrapper {
 		$root.append($navGroup);
 
 		// start
-		this.updateCarousel(imageTimeoutKey, 0);
+		if (this.isInViewport($root)) {
+			this.resumeTimeout(imageTimeoutKey);
+		}
+
+		this.$root = $root;
 	}
 
 	updateCarousel(imageTimeoutKey, newIdx) {
@@ -288,7 +302,12 @@ class CarouselWrapper {
 		});
 		this.carouselTimeoutsMap[imageTimeoutKey].currentIdx = newIdx;
 
-		if(this.autoAdvance) {
+		const autoAdvance = this.$root.attr("data-auto-advance") === "true";
+		const autoAdvanceTimoutSeconds = parseInt(
+			this.$root.attr("data-auto-advance-timeout-s") || "10"
+		);
+
+		if(autoAdvance) {
 			this.carouselTimeoutsMap[imageTimeoutKey].timeout = setTimeout(() => {
 				if (items.length === 0) { return; }
 
@@ -296,7 +315,7 @@ class CarouselWrapper {
 				this.carouselTimeoutsMap[imageTimeoutKey].currentIdx = nextImgIdx;
 
 				this.updateCarousel(imageTimeoutKey, nextImgIdx)
-			}, this.autoAdvanceTimeoutSeconds * 1000);
+			}, autoAdvanceTimoutSeconds * 1000);
 		}
 	}
 
