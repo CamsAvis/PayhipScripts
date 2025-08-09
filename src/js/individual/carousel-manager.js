@@ -47,7 +47,7 @@ function initCarousel($start) {
 				.attr("data-carousel-selected", isFirst ? "true" : "false")
 				.appendTo($start);
 
-			addImageZoomer($img, imageTimeoutKey);
+			addImageMagnifierOnHover($img, imageTimeoutKey);
 
 			const $navItem = $("<div>")
 				.addClass("nav-item")
@@ -155,7 +155,7 @@ const resumeTimeout = (imageTimeoutKey) => {
 	updateCarousel(imageTimeoutKey, timeoutObject.currentIdx);
 }
 
-function addImageZoomer($zoomerTarget, imageTimeoutKey) {
+function addImageMagnifierOnHover($zoomerTarget, imageTimeoutKey) {
 	$zoomerTarget.attr("data-carousel-zoomer-hovered", "false");
 
 	$zoomerTarget.on("mouseenter", function () {
