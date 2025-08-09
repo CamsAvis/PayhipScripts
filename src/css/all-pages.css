@@ -301,7 +301,7 @@ h4 strong {
 	pointer-events: none;
 }
 
-.carousel-nav-group .navitem {
+.carousel-nav-group .nav-item {
 		background-color: gray;
 		transition: background-color 200ms;
 		cursor: pointer;
@@ -310,7 +310,7 @@ h4 strong {
 		border-radius: 50%;
 }
 
-.carousel-nav-group .navitem:hover,
+.carousel-nav-group .nav-item:hover,
 .carousel-nav-group .nav-item[data-nav-selected="true"] {
 	background-color: white;
 }
