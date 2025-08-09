@@ -244,15 +244,23 @@ h4 strong, h4 em {
 
 
 .custom-carousel[data-show-arrows="true"] .carousel-navigator-arrow {
-	display: grid;
+	display: none;
+}
+
+.custom-carousel[data-show-arrows="true"] .carousel-image-container {
+	grid-column: 2 / 3;
 }
 
 .custom-carousel[data-show-arrows="false"] .carousel-navigator-arrow {
 	display: none;
 }
 
+.custom-carousel[data-show-arrows="false"] .carousel-image-container {
+	grid-column: 1 / 4;
+}
+
 .custom-carousel[data-show-nav="true"] .carousel-nav-group {
-	display: grid;
+	display: flex;
 }
 
 .custom-carousel[data-show-nav="false"] .carousel-nav-group {
@@ -267,6 +275,8 @@ h4 strong, h4 em {
 	display: grid;
 	grid-template-columns: auto 1fr auto;
 	grid-template-rows: 1fr;
+	place-items: center;
+	gap: 0.5rem;
 }
 
 .carousel-image-container {
@@ -275,6 +285,10 @@ h4 strong, h4 em {
 	width: 100%;
 	aspect-ratio: 16 / 9;
 	background-color: rgba(12,12,12,0.2);
+}
+
+.carousel-image-container:hover {
+	background-color: rgba(12,12,12,0.5);
 }
 
 .custom-carousel img {
