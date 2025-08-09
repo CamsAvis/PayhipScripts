@@ -299,19 +299,20 @@ h4 strong {
 	transition: opacity 200ms;
 	opacity: 0;
 	pointer-events: none;
-	
-	& .nav-item {
+}
+
+.carousel-nav-group .navitem {
 		background-color: gray;
 		transition: background-color 200ms;
 		cursor: pointer;
 		height: 0.85rem;
 		width: 0.85rem;
 		border-radius: 50%;
-	}
+}
 
-	& .nav-item:hover, .nav-item[data-nav-selected="true"] {
-		background-color: white;
-	}
+.carousel-nav-group .navitem:hover,
+.carousel-nav-group .nav-item[data-nav-selected="true"] {
+	background-color: white;
 }
 
 .custom-carousel:hover .carousel-nav-group {
