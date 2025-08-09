@@ -68,22 +68,26 @@ jobs:
     - name: Minify JS
       run: terser deployment/bundle.js -o deployment/bundle.min.js -c -m
 
-    - name: Publish individual js files
+    - name: Publish individual js files (with branch prefix)
       shell: pwsh
       run: |
+        $branch = "${env:GITHUB_REF_NAME}" -replace '[\\/]', '-'
         $deployIndividual = Join-Path $PWD "deployment/individual"
         if (-not (Test-Path $deployIndividual)) {  New-Item -ItemType Directory -Path $deployIndividual | Out-Null }
         Get-ChildItem -Path "$PWD/src/js/individual" -Filter *.js -File | ForEach-Object {
-          Copy-Item $_.FullName -Destination $deployIndividual
+          $newName = "$branch-$($_.Name)"
+          Copy-Item $_.FullName -Destination (Join-Path $deployIndividual $newName)
         }
 
-    - name: Publish individual css files
+    - name: Publish individual css files (with branch prefix)
       shell: pwsh
       run: |
+        $branch = "${env:GITHUB_REF_NAME}" -replace '[\\/]', '-'
         $deployIndividual = Join-Path $PWD "deployment/individual"
         if (-not (Test-Path $deployIndividual)) {  New-Item -ItemType Directory -Path $deployIndividual | Out-Null }
         Get-ChildItem -Path "$PWD/src/css/individual" -Filter *.css -File | ForEach-Object {
-          Copy-Item $_.FullName -Destination $deployIndividual
+          $newName = "$branch-$($_.Name)"
+          Copy-Item $_.FullName -Destination (Join-Path $deployIndividual $newName)
         }
 
     - name: Deploy deployment folder to gh-pages branch
