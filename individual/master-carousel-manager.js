@@ -105,6 +105,14 @@ class CarouselWrapper {
 			.attr("id", imageTimeoutKey)
 			.attr("data-auto-advance", autoAdvance.toString())
 			.attr("data-auto-advance-timeout-s", autoAdvanceTimeoutSeconds.toString())
+			.on("mouseenter", () => {
+				$root.attr("data-carousel-zoomer-hovered", "true");
+				this.pauseTimeout(imageTimeoutKey);
+			})
+			.on("mouseleave", () => {
+				$root.attr("data-carousel-zoomer-hovered", "false");
+				this.resumeTimeout(imageTimeoutKey);
+			});
 
 		const $navGroup = $("<div>").addClass("carousel-nav-group");
 
@@ -235,38 +243,27 @@ class CarouselWrapper {
 		this.updateCarousel(imageTimeoutKey, timeoutObject.currentIdx);
 	}
 
-	addImageMagnifierOnHover($zoomerTarget, imageTimeoutKey) {
-		$zoomerTarget.attr("data-carousel-zoomer-hovered", "false");
+	addImageMagnifierOnHover($zoomerTarget) {
+		$zoomerTarget.attr("data-carousel-zoomer-hovered", "false")
+			.on("mousemove", (e) => {
+				const isHovered = $zoomerTarget.attr("data-carousel-zoomer-hovered") === "true";
+				if (!isHovered) { return; }
 
-		$zoomerTarget.on("mouseenter", () => {
-			$zoomerTarget.attr("data-carousel-zoomer-hovered", "true");
-			this.pauseTimeout(imageTimeoutKey);
-		})
+				const rect = $zoomerTarget[0].getBoundingClientRect();
+				const x = ((e.clientX - rect.left) / rect.width) * 100;
+				const y = ((e.clientY - rect.top) / rect.height) * 100;
 
-		$zoomerTarget.on("mousemove", (e) => {
-			const isHovered = $zoomerTarget.attr("data-carousel-zoomer-hovered") === "true";
-			if (!isHovered) { return; }
-
-			const rect = $zoomerTarget[0].getBoundingClientRect();
-			const x = ((e.clientX - rect.left) / rect.width) * 100;
-			const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-			$zoomerTarget.css({
-				transformOrigin: `${x}% ${y}%`,
-				transform: "scale(2)"
+				$zoomerTarget.css({
+					transformOrigin: `${x}% ${y}%`,
+					transform: "scale(2)"
+				})
 			})
-		});
-
-		$zoomerTarget.on("mouseleave", () => {
-			$zoomerTarget.attr("data-carousel-zoomer-hovered", "false");
-
-			$zoomerTarget.css({
-				transformOrigin: "center center",
-				transform: "scale(1)"
-			});
-
-			this.resumeTimeout(imageTimeoutKey);
-		});
+			.on("mouseleave", (e) => {
+				$zoomerTarget.css({
+					transformOrigin: "center center",
+					transform: "scale(1)"
+				});
+			})
 	}
 }
 
