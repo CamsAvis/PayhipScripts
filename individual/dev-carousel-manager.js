@@ -17,7 +17,8 @@ class CarouselWrapper {
 	}
 
 	initCarousels() {
-		$(".product-description > *").each((_, $element) => {
+		$(".product-description > *").each((_, element) => {
+			const $element = $(element);
 			if ($element.text().trim() !== "%%CAROUSEL_START%%") {
 				return;
 			}
@@ -30,24 +31,25 @@ class CarouselWrapper {
 		$item.text().trim() === "%%CAROUSEL_END%%";
 	}
 
-	initCarousel($start) {
+	initCarousel($root) {
 		let imageTimeoutKey = crypto.randomUUID();
 
-		$start.html("").addClass("custom-carousel");
+		$root.html("").addClass("custom-carousel");
 		const $navGroup = $("<div>").addClass("carousel-nav-group");
 
 		// Gather all children between start and end markers
-		let $current = $($start).next();
+		let $current = $($root).next();
 		let navItemIdx = 0;
 
 		let carouselTimeoutObject = CarouselTimeout.init();
 		while ($current.length && !isCarouselEnd($current)) {
-			$current.find("img").each((_, $img) => {
+			$current.find("img").each((_, img) => {
+				const $img = $(img);
 				const currentIndex = navItemIdx;
 
 				$img.addClass("zoom-target")
 					.attr("data-carousel-selected", navItemIdx === 0 ? "true" : "false")
-					.appendTo($start);
+					.appendTo($root);
 
 				this.addImageMagnifierOnHover($img, imageTimeoutKey);
 
@@ -91,7 +93,7 @@ class CarouselWrapper {
 
 				updateCarousel(imageTimeoutKey, newImgIdx);
 			})
-			.appendTo($start);
+			.appendTo($root);
 
 		// Next button
 		$("<div>")
@@ -104,10 +106,10 @@ class CarouselWrapper {
 				let newImgIdx = (currentIdx + 1) % items.length;
 				updateCarousel(imageTimeoutKey, newImgIdx);
 			})
-			.appendTo($start);
+			.appendTo($root);
 
 		// add the nav
-		$start.append($navGroup);
+		$root.append($navGroup);
 
 		// start the carousel
 		updateCarousel(imageTimeoutKey, 0);
