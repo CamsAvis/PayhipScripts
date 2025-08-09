@@ -78,8 +78,7 @@ function initCarousel($start) {
 
 	// Prev button
 	$("<div>")
-		.addClass("carousel-navigator-arrow")
-		.addClass("carousel-navigator-arrow-prev")
+		.addClass("carousel-navigator-arrow carousel-navigator-arrow-prev")
 		.html('<span class="material-symbols-outlined">arrow_back_ios</span>')
 		.on("click", () => {
 			const { currentIdx, items } = carouselTimeoutsDict[imageTimeoutKey]
@@ -94,8 +93,7 @@ function initCarousel($start) {
 
 	// Next button
 	$("<div>")
-		.addClass("carousel-navigator-arrow")
-		.addClass("carousel-navigator-arrow-next")
+		.addClass("carousel-navigator-arrow carousel-navigator-arrow-next")
 		.html('<span class="material-symbols-outlined">arrow_forward_ios</span>')
 		.on("click", () => {
 			const { currentIdx, items } = carouselTimeoutsDict[imageTimeoutKey]
