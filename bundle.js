@@ -499,7 +499,7 @@ function addImageZoomer($zoomerTarget, imageTimeoutKey) {
 	$zoomerTarget.on('mousemove', function (e) {
 		if (!isHovered) { return; }
 
-		const rect = $zoomerTarget.getBoundingClientRect();
+		const rect = $zoomerTarget[0].getBoundingClientRect();
 		const x = ((e.clientX - rect.left) / rect.width) * 100;
 		const y = ((e.clientY - rect.top) / rect.height) * 100;
 
