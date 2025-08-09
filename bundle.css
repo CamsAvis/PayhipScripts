@@ -243,10 +243,6 @@ h4 strong, h4 em {
 }
 
 
-.custom-carousel[data-show-arrows="true"] .carousel-navigator-arrow {
-	display: none;
-}
-
 .custom-carousel[data-show-arrows="true"] .carousel-image-container {
 	grid-column: 2 / 3;
 }
