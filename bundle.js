@@ -136,8 +136,8 @@ class CarouselWrapper {
 				return;
 			}
 
-			let autoAdvance, showNav, showArrows;
-			autoAdvance = showNav = showArrows = true;
+			let autoAdvance, showNav, showArrows, enableZoom;
+			autoAdvance = showNav = showArrows = enableZoom = true;
 			let autoAdvanceTimeoutSeconds = 10;
 
 			let match;
@@ -162,6 +162,9 @@ class CarouselWrapper {
 					case "show-arrows":
 						showArrows = value === "true";
 						break;
+					case "enable-zoom":
+						enableZoom = value === "true";
+						break;
 				}
 			}
 
@@ -170,7 +173,8 @@ class CarouselWrapper {
 				autoAdvance,
 				autoAdvanceTimeoutSeconds,
 				showNav,
-				showArrows
+				showArrows,
+				enableZoom
 			);
 		});
 
@@ -213,7 +217,7 @@ class CarouselWrapper {
 			);
 	}
 
-	initCarousel($root, autoAdvance, autoAdvanceTimeoutSeconds, showNav, showArrows) {
+	initCarousel($root, autoAdvance, autoAdvanceTimeoutSeconds, showNav, showArrows, enableZoom) {
 		let imageTimeoutKey = crypto.randomUUID();
 		
 		// Init carousel stuff
@@ -223,10 +227,12 @@ class CarouselWrapper {
 			.attr("data-auto-advance", autoAdvance.toString())
 			.attr("data-auto-advance-timeout-s", autoAdvanceTimeoutSeconds.toString())
 			.attr("data-show-nav", showNav.toString())
-			.attr("data-show-arrows", showArrows.toString());
+			.attr("data-show-arrows", showArrows.toString())
+			.attr("data-enable-zoom", enableZoom.toString());
 
-		const $imageContainer = $("<div>").addClass("carousel-image-container");
 		const $navGroup = $("<div>").addClass("carousel-nav-group");
+		const $imageContainer = $("<div>").addClass("carousel-image-container");
+		this.addPauseAutoAdvance($imageContainer, imageTimeoutKey);
 
 		// Gather all children between start and end markers
 		let $current = $($root).next();
@@ -242,7 +248,7 @@ class CarouselWrapper {
 					.attr("data-carousel-selected", navItemIdx === 0 ? "true" : "false")
 					.appendTo($imageContainer);
 
-				this.addImageMagnifierOnHover($img, imageTimeoutKey);
+				this.addImageMagnifierOnHover($img);
 
 				const $navItem = $("<div>")
 					.addClass("nav-item")
@@ -274,7 +280,7 @@ class CarouselWrapper {
 		const $prevArrow = $("<div>")
 			.addClass("carousel-navigator-arrow carousel-navigator-arrow-prev")
 			.html(`
-				<span class="material-symbols-outlined" style="transform: 'rotate(90deg);'">
+				<span class="material-symbols-outlined" style="transform: rotate(180deg);">
 					arrow_forward_ios
 				</span>
 			`)
@@ -356,17 +362,36 @@ class CarouselWrapper {
 		this.updateCarousel(imageTimeoutKey, timeoutObject.currentIdx);
 	}
 
-	addImageMagnifierOnHover($zoomerTarget, imageTimeoutKey) {
-		$zoomerTarget.attr("data-carousel-zoomer-hovered", "false");
+	addPauseAutoAdvance($element, imageTimeoutKey) {
+		$element.attr("data-carousel-zoomer-hovered", "false");
 
-		$zoomerTarget.on("mouseenter", () => {
-			$zoomerTarget.attr("data-carousel-zoomer-hovered", "true");
+		$element.on("mouseenter", () => {
+			$element.attr("data-carousel-zoomer-hovered", "true");
 			this.pauseTimeout(imageTimeoutKey);
 		})
 
+		$element.on("mouseleave", () => {
+			$element.attr("data-carousel-zoomer-hovered", "false");
+
+			$element.css({
+				transformOrigin: "center center",
+				transform: "scale(1)"
+			});
+
+			this.resumeTimeout(imageTimeoutKey);
+		});
+	}
+
+	addImageMagnifierOnHover($zoomerTarget) {
 		$zoomerTarget.on("mousemove", (e) => {
 			const isHovered = $zoomerTarget.attr("data-carousel-zoomer-hovered") === "true";
-			if (!isHovered) { return; }
+			const shouldZoom = $zoomerTarget
+				.closest(".custom-carousel")
+				.attr("data-enable-zoom") === "true";
+
+			if (!isHovered || !shouldZoom) { 
+				return; 
+			}
 
 			const rect = $zoomerTarget[0].getBoundingClientRect();
 			const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -376,17 +401,6 @@ class CarouselWrapper {
 				transformOrigin: `${x}% ${y}%`,
 				transform: "scale(2)"
 			})
-		});
-
-		$zoomerTarget.on("mouseleave", () => {
-			$zoomerTarget.attr("data-carousel-zoomer-hovered", "false");
-
-			$zoomerTarget.css({
-				transformOrigin: "center center",
-				transform: "scale(1)"
-			});
-
-			this.resumeTimeout(imageTimeoutKey);
 		});
 	}
 }
