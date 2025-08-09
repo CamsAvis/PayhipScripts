@@ -282,46 +282,38 @@ document.head.appendChild(style2);
 
 
 const initProductPageNav = () => {
-	const productDescription = document.querySelector("div.product-description");
+	const $productDescription = $(document).find("div.product-description");
 
-	const productDescriptionNavigation = document.createElement("ol");
-	productDescriptionNavigation.classList.add("product-description-navigation");
+	const $productDescriptionNavigation = $("<ol>").addClass("product-description-navigation");
+	const $productDescriptionHeadingText = $("<h1>").text("SHORTCUTS");
+	$productDescription.prepend($productDescriptionHeadingText);
 
-	const productDescriptionHeadingText = document.createElement("h1");
-	productDescriptionHeadingText.innerText = "SHORTCUTS";
-	productDescription.insertBefore(productDescriptionHeadingText, productDescription.firstChild);
+	$productDescription.find("h2").each(function() {
+		const $heading = $(this);
 
-	const headings = Array.from(productDescription.querySelectorAll("h2"));
-	headings.forEach(heading => {
-		const text = heading.innerText
+		const text = $heading.text()
 			.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, "") // remove emojis
 			.trim()
 			.toLowerCase()
 			.replace(/\b\w/g, char => char.toUpperCase());
 
 		if (text.length > 0) {
-			heading.id = text;
-			heading.classList.add("heading-link");
-
-			heading.addEventListener("click", function (e) {
-				e.preventDefault();
+			$heading.attr("id", text).addClass("heading-link");
+			heading.on("click", function () {
 				const url = `${window.location.origin}${window.location.pathname}#${heading.id}`;
 				navigator.clipboard.writeText(url);
 				window.location.hash = heading.id;
 			});
 
-			const headerListItem = document.createElement("li");
+			const $headerListItem = $("<li>").appendTo($productDescriptionNavigation);
 
-			const headerNavItem = document.createElement("a");
-			headerNavItem.innerText = text;
-			headerNavItem.href = `#${heading.id}`
-			headerNavItem.classList.add("header-nav-item");
+			const headerNavItem = $(`<a href="#${heading.id}">`)
+				.text(text)
+				.addClass("header-nav-item")
+				.appendTo($headerListItem);
 
-			headerListItem.appendChild(headerNavItem);
-			productDescriptionNavigation.appendChild(headerListItem);
-
-			if (productDescription) {
-				productDescriptionHeadingText.insertAdjacentElement('afterend', productDescriptionNavigation);
+			if ($productDescription.length) {
+				$productDescriptionHeadingText.after($productDescriptionNavigation);
 			}
 		}
 	});
