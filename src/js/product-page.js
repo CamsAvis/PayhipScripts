@@ -124,6 +124,7 @@ const updateCarousel = (imageTimeoutKey, newIdx) => {
 		$el.attr("data-carousel-selected", selectedStr);
 		$(navItems[idx]).attr("data-nav-selected", selectedStr);
 	});
+	carouselTimeoutsDict[imageTimeoutKey] = newIdx;
 
 	carouselTimeoutsDict[imageTimeoutKey].timeout = setTimeout(() => {
 		if (items.length === 0) { return; }
