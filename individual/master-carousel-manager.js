@@ -47,6 +47,8 @@ class CarouselWrapper {
 				}
 			}
 
+			this.$root = $element
+
 			this.initCarousel(
 				$element,
 				autoAdvance,
@@ -172,8 +174,6 @@ class CarouselWrapper {
 		if (this.isInViewport($root)) {
 			this.resumeTimeout(imageTimeoutKey);
 		}
-
-		this.$root = $root;
 	}
 
 	updateCarousel(imageTimeoutKey, newIdx) {
