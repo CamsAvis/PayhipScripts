@@ -87,7 +87,7 @@ function initCarousel($start) {
 			let newImgIdx = (currentIdx - 1) % items.length;
 			newImgIdx = newImgIdx < 0 ? items.length - 1 : newImgIdx;
 
-			updateCarousel(imageTimeoutKey, newImgIdx);
+			// updateCarousel(imageTimeoutKey, newImgIdx);
 		})
 		.appendTo($start);
 
@@ -100,7 +100,7 @@ function initCarousel($start) {
 			if (items.length === 0) { return; }
 
 			let newImgIdx = (currentIdx + 1) % items.length;
-			updateCarousel(imageTimeoutKey, newImgIdx);
+			// updateCarousel(imageTimeoutKey, newImgIdx);
 		})
 		.appendTo($start);
 
