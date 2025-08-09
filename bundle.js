@@ -336,7 +336,7 @@ if (document.body.id === "page-product") {
 
 let imageTimeoutsDict = {
 	"example": {
-		$items: [],
+		items: [],
 		$navItems: [],
 		currentIdx: 0,
 		timeout: 0
@@ -383,7 +383,7 @@ function initCarousel($start) {
 
 	let imageTimeoutKey = crypto.randomUUID();
 	const currentTimeoutObject = {
-		$items: $carouselItems,
+		items: $carouselItems,
 		$navItems: $navGroup.children(),
 		currentIdx: 0,
 		timeout: undefined
@@ -399,11 +399,11 @@ function initCarousel($start) {
 		.addClass("carousel-last")
 		.html('<span class="material-symbols-outlined">arrow_back_ios</span>')
 		.on("click", () => {
-			const { currentIdx, $items } = imageTimeoutsDict[imageTimeoutKey]
-			if($items.length === 0) { return; }
+			const { currentIdx, items } = imageTimeoutsDict[imageTimeoutKey]
+			if(items.length === 0) { return; }
 
-			let newImgIdx = (currentIdx - 1) % $items.length;
-			newImgIdx = newImgIdx < 0 ? $items.length - 1 : newImgIdx;
+			let newImgIdx = (currentIdx - 1) % items.length;
+			newImgIdx = newImgIdx < 0 ? items.length - 1 : newImgIdx;
 
 			updateCarousel(imageTimeoutKey, newImgIdx);
 		})
@@ -414,10 +414,10 @@ function initCarousel($start) {
 		.addClass("carousel-next")
 		.html('<span class="material-symbols-outlined">arrow_forward_ios</span>')
 		.on("click", () => {
-			const { currentIdx, $items } = imageTimeoutsDict[imageTimeoutKey]
-			if($items.length === 0) { return; }
+			const { currentIdx, items } = imageTimeoutsDict[imageTimeoutKey]
+			if(items.length === 0) { return; }
 
-			let newImgIdx = (currentIdx + 1) % $items.length;
+			let newImgIdx = (currentIdx + 1) % items.length;
 			updateCarousel(imageTimeoutKey, newImgIdx);
 		})
 		.appendTo($start);
@@ -426,11 +426,11 @@ function initCarousel($start) {
 }
 
 const updateCarousel = (imageTimeoutKey, newIdx) => {
-	const { $items, $navItems, timeout } = imageTimeoutsDict[imageTimeoutKey]
+	const { items, $navItems, timeout } = imageTimeoutsDict[imageTimeoutKey]
 
-	$items.each(function (idx, el) {
+	items.forEach(($el, idx) => {
 		const selectedStr = (idx === newIdx).toString();
-		$(el).attr("data-carousel-selected", selectedStr);
+		$el.attr("data-carousel-selected", selectedStr);
 		$navItems.eq(idx).attr("data-nav-selected", selectedStr);
 	});
 
@@ -439,9 +439,9 @@ const updateCarousel = (imageTimeoutKey, newIdx) => {
 	}
 
 	imageTimeoutsDict[imageTimeoutKey].timeout = setTimeout(() => {
-		if($items.length === 0) { return; }
+		if(items.length === 0) { return; }
 		
-		let imgIdx = (newIdx + 1) % $items.length;
+		let imgIdx = (newIdx + 1) % items.length;
 		imageTimeoutsDict[imageTimeoutKey].currentIdx = imgIdx;
 
 		updateCarousel(imageTimeoutKey, imgIdx)
