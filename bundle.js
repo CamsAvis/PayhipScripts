@@ -270,9 +270,8 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     // Add back to top button
-    $("<a>")
+    $("<a href='#'>")
       .html(`<span class="material-symbols-outlined">arrow_upward_alt</span>`)
-      .href("#")
       .addClass("back-to-top-button")
       .appendTo(document.body);
 
