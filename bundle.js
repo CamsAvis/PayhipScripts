@@ -136,7 +136,7 @@ class CarouselWrapper {
 				return;
 			}
 
-			let autoAdvance = true;
+			let autoAdvance = showNav = showArrows = true;
 			let autoAdvanceTimeoutSeconds = 10;
 
 			let match;
@@ -145,16 +145,21 @@ class CarouselWrapper {
 				const { key, value } = match.groups;
 
 				switch(key) {
-					case 'auto-advance':
+					case "auto-advance":
 						autoAdvance = value === "true";
 						break;
-					case 'auto-advance-speed-s':
+					case "auto-advance-speed-s":
 						try { 
 							autoAdvanceTimeoutSeconds = parseInt(value); 
 						} catch {
 							console.log("inputted value for auto-advance-speed-s was invalid");
 						}
-						
+						break;
+					case "show-nav":
+						showNav = value === "true";
+						break;
+					case "show-arrows":
+						showArrows = value === "true";
 						break;
 				}
 			}
@@ -162,7 +167,9 @@ class CarouselWrapper {
 			this.initCarousel(
 				$element,
 				autoAdvance,
-				autoAdvanceTimeoutSeconds
+				autoAdvanceTimeoutSeconds,
+				showNav,
+				showArrows
 			);
 		});
 
@@ -205,7 +212,7 @@ class CarouselWrapper {
 			);
 	}
 
-	initCarousel($root, autoAdvance, autoAdvanceTimeoutSeconds) {
+	initCarousel($root, autoAdvance, autoAdvanceTimeoutSeconds, showNav, showArrows) {
 		let imageTimeoutKey = crypto.randomUUID();
 		
 		// Init carousel stuff
@@ -214,8 +221,16 @@ class CarouselWrapper {
 			.attr("id", imageTimeoutKey)
 			.attr("data-auto-advance", autoAdvance.toString())
 			.attr("data-auto-advance-timeout-s", autoAdvanceTimeoutSeconds.toString())
+			.attr("data-show-nav", showNav.toString())
+			.attr("data-show-arrows", showArrows.toString());
 
-		const $navGroup = $("<div>").addClass("carousel-nav-group");
+		const $imageContainer = $("<div>")
+			.addClass("carousel-image-container")
+			.appendTo($root);
+
+		const $navGroup = $("<div>")
+			.addClass("carousel-nav-group")
+			.appendTo($root);
 
 		// Gather all children between start and end markers
 		let $current = $($root).next();
@@ -229,7 +244,7 @@ class CarouselWrapper {
 
 				$img.addClass("zoom-target")
 					.attr("data-carousel-selected", navItemIdx === 0 ? "true" : "false")
-					.appendTo($root);
+					.appendTo($imageContainer);
 
 				this.addImageMagnifierOnHover($img, imageTimeoutKey);
 
@@ -272,7 +287,7 @@ class CarouselWrapper {
 
 				this.updateCarousel(imageTimeoutKey, newImgIdx);
 			})
-			.appendTo($root);
+			.before($imageContainer);
 
 		// Next button
 		$("<div>")
@@ -285,10 +300,7 @@ class CarouselWrapper {
 				let newImgIdx = (currentIdx + 1) % items.length;
 				this.updateCarousel(imageTimeoutKey, newImgIdx);
 			})
-			.appendTo($root);
-
-		// add the nav
-		$root.append($navGroup);
+			.after($imageContainer);
 
 		// start
 		this.updateCarousel(imageTimeoutKey, 0);
