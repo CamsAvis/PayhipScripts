@@ -13,8 +13,7 @@ const addCarousels = () => {
 			return;
 		}
 
-		const $closestParent = $(this).parentsUntil(".product-description").last();
-		initCarousel($closestParent);
+		initCarousel($(this));
 	});
 }
 
