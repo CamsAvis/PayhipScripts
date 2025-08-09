@@ -40,7 +40,7 @@ jobs:
       shell: pwsh
       run: |
         $DEPLOY_PATH = "$PWD\deployment"
-        $COMBINED_CSS_PATH = Join-Path $DEPLOY_PATH "bundle.css"
+        $COMBINED_CSS_PATH = Join-Path $DEPLOY_PATH "bundle.c	ss"
         New-Item -ItemType File -Path $COMBINED_CSS_PATH -Force | Out-Null
         Get-ChildItem -Path "$PWD\src\css" -Filter *.css -File -Recurse |
           Sort-Object Name |
