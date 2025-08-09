@@ -364,8 +364,14 @@ function initCarousel($start) {
 
 	// Gather all children between start and end markers
 	let $current = $($start).next();
-	let imgItems = [];
-	let navItems = [];
+
+	let carouselTimeoutObject = {
+		items: [],
+		navItems: [],
+		currentIdx: 0,
+		timeout: undefined
+	}
+
 	let navItemIdx = 0;
 	while ($current.length && !isCarouselEnd($current)) {
 		let isFirst = $current.is($start);
@@ -388,8 +394,8 @@ function initCarousel($start) {
 				})
 				.appendTo($navGroup);
 
-			imgItems.push($img);
-			navItems.push($navItem);
+			carouselTimeoutObject.items.push($img);
+			carouselTimeoutObject.navItems.push($navItem);
 
 			isFirst = false;
 			navItemIdx++;
@@ -405,12 +411,7 @@ function initCarousel($start) {
 		$current.remove();
 	}
 
-	carouselTimeoutsDict[imageTimeoutKey] = {
-		items: imgItems,
-		navItems: navItems,
-		currentIdx: 0,
-		timeout: undefined
-	};
+	carouselTimeoutsDict[imageTimeoutKey] = carouselTimeoutObject;
 
 	// Prev button
 	$("<div>")
