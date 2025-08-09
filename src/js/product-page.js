@@ -1,4 +1,4 @@
-let imageTimeoutsDict = {
+let carouselTimeoutsDict = {
 	"example": {
 		items: [],
 		$navItems: [],
@@ -15,7 +15,7 @@ const addCarousels = () => {
 	})
 }
 
-const isCarouselEnd = ($item) => $item.text().trim().toUpperCase() === "%%CAROUSEL_END%%";
+const isCarouselEnd = ($item) => $item.find("strong em u") .text().trim().toUpperCase() === "%%CAROUSEL_END%%";
 
 function initCarousel($start) {
 	$start.html("").addClass("custom-carousel");
@@ -52,7 +52,7 @@ function initCarousel($start) {
 		currentIdx: 0,
 		timeout: undefined
 	};
-	imageTimeoutsDict[imageTimeoutKey] = currentTimeoutObject;
+	carouselTimeoutsDict[imageTimeoutKey] = currentTimeoutObject;
 
 	$navGroup.children().on("click", function () {
 		updateCarousel(imageTimeoutKey, $(this).index());
@@ -63,7 +63,7 @@ function initCarousel($start) {
 		.addClass("carousel-last")
 		.html('<span class="material-symbols-outlined">arrow_back_ios</span>')
 		.on("click", () => {
-			const { currentIdx, items } = imageTimeoutsDict[imageTimeoutKey]
+			const { currentIdx, items } = carouselTimeoutsDict[imageTimeoutKey]
 			if(items.length === 0) { return; }
 
 			let newImgIdx = (currentIdx - 1) % items.length;
@@ -78,7 +78,7 @@ function initCarousel($start) {
 		.addClass("carousel-next")
 		.html('<span class="material-symbols-outlined">arrow_forward_ios</span>')
 		.on("click", () => {
-			const { currentIdx, items } = imageTimeoutsDict[imageTimeoutKey]
+			const { currentIdx, items } = carouselTimeoutsDict[imageTimeoutKey]
 			if(items.length === 0) { return; }
 
 			let newImgIdx = (currentIdx + 1) % items.length;
@@ -90,7 +90,7 @@ function initCarousel($start) {
 }
 
 const updateCarousel = (imageTimeoutKey, newIdx) => {
-	const { items, $navItems, timeout } = imageTimeoutsDict[imageTimeoutKey]
+	const { items, $navItems, timeout } = carouselTimeoutsDict[imageTimeoutKey]
 
 	items.forEach(($el, idx) => {
 		const selectedStr = (idx === newIdx).toString();
@@ -102,27 +102,27 @@ const updateCarousel = (imageTimeoutKey, newIdx) => {
 		clearTimeout(timeout);
 	}
 
-	imageTimeoutsDict[imageTimeoutKey].timeout = setTimeout(() => {
+	carouselTimeoutsDict[imageTimeoutKey].timeout = setTimeout(() => {
 		if(items.length === 0) { return; }
 		
 		let imgIdx = (newIdx + 1) % items.length;
-		imageTimeoutsDict[imageTimeoutKey].currentIdx = imgIdx;
+		carouselTimeoutsDict[imageTimeoutKey].currentIdx = imgIdx;
 
 		updateCarousel(imageTimeoutKey, imgIdx)
 	}, 10 * 1000);
 }
 
 const pauseTimeout = (imageTimeoutKey) => {
-	if(!imageTimeoutsDict[imageTimeoutKey]?.timeout) {
+	if(!carouselTimeoutsDict[imageTimeoutKey]?.timeout) {
 		return;
 	}
 
-	clearTimeout(imageTimeoutsDict[imageTimeoutKey].timeout);
-	imageTimeoutsDict[imageTimeoutKey].timeout = undefined;
+	clearTimeout(carouselTimeoutsDict[imageTimeoutKey].timeout);
+	carouselTimeoutsDict[imageTimeoutKey].timeout = undefined;
 }
 
 const resumeTimeout = (imageTimeoutKey) => {
-	const timeoutObject = imageTimeoutsDict[imageTimeoutKey];
+	const timeoutObject = carouselTimeoutsDict[imageTimeoutKey];
 	if(timeoutObject?.timeout) {
 		return;
 	}
