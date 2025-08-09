@@ -283,10 +283,6 @@ h4 strong, h4 em {
 	background-color: rgba(12,12,12,0.2);
 }
 
-.carousel-image-container:hover {
-	background-color: rgba(12,12,12,0.5);
-}
-
 .custom-carousel img {
   position: absolute;
   top: 0;
@@ -326,10 +322,10 @@ h4 strong, h4 em {
   color: white;
   top: 50%;
 	cursor: pointer;
-	
-	&:hover {
-		background-color: rgba(12,12,12,0.5);
-	}
+}
+
+.carousel-navigator-arrow:hover {
+	background-color: rgba(12,12,12,0.5);
 }
 
 .material-symbols-outlined {
@@ -359,7 +355,7 @@ h4 strong, h4 em {
 }
 
 .carousel-nav-group {
-	grid-template-columns: 1 / 4;
+	grid-column: 1 / 4;
 	z-index: 2;
 
 	display: flex;
