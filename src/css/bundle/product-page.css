@@ -1,0 +1,36 @@
+
+.product-details-wrapper blockquote {
+	border: none !important;
+	padding-left: 0 !important;
+}
+
+.heading-link {
+	position: relative;
+}
+
+.heading-link:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.heading-link:hover::before {
+	display: inline;
+}
+
+.heading-link::before {
+	position: absolute;
+	left: -1rem;
+	font-weight: 100;
+	content: '#';
+	font-size: 1em;
+	color: rgba(255,255,255,0.25);
+	display: none;
+}
+
+.product-description-navigation a {
+	color: rgba(255,255,255,0.85);
+}
+
+.product-description-navigation a:hover {
+	color: white;
+}

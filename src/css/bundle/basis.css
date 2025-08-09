@@ -1,0 +1,27 @@
+:root {
+  --star-bezier: cubic-bezier(0.19, 1, 0.22, 1);
+  --color-accent: #9aff9e;
+}
+
+html {
+	scroll-behavior: smooth;
+	scroll-padding-top: 10vh;
+}
+
+
+header {
+  background-color: rgba(12, 12, 12, 0.2) !important;
+  backdrop-filter: blur(3px);
+  overflow: hidden;
+}
+
+strong, em {
+  color: white !important;
+}
+
+h2 strong, h2 em,
+h3 strong, h3 em,
+h4 strong, h4 em {
+  letter-spacing: 0.1rem !important;
+  font-weight: 400 !important;
+}
