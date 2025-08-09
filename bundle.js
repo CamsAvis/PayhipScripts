@@ -147,26 +147,16 @@ class CarouselWrapper {
 			while ((match = regex.exec($element.text())) !== null) {
 				const { key, value } = match.groups;
 
-				switch(key) {
-					case "auto-advance":
-						autoAdvance = value === "true";
-						break;
-					case "auto-advance-speed-s":
-						try { 
-							autoAdvanceTimeoutSeconds = parseInt(value); 
-						} catch {
-							console.log("inputted value for auto-advance-speed-s was invalid");
-						}
-						break;
-					case "show-nav":
-						showNav = value === "true";
-						break;
-					case "show-arrows":
-						showArrows = value === "true";
-						break;
-					case "enable-zoom":
-						enableZoom = value === "true";
-						break;
+				try {
+					switch(key) {
+						case "show-nav": 	showNav = value === "true"; break;
+						case "show-arrows": showArrows = value === "true"; break;
+						case "enable-zoom": enableZoom = value === "true"; break;
+						case "auto-advance": autoAdvance = value === "true"; break;
+						case "auto-advance-speed-s": autoAdvanceTimeoutSeconds = parseInt(value); break;
+					}
+				} catch(e) {
+					console.log(e);
 				}
 			}
 
@@ -229,11 +219,12 @@ class CarouselWrapper {
 			.attr("data-auto-advance", autoAdvance.toString())
 			.attr("data-auto-advance-timeout-s", autoAdvanceTimeoutSeconds.toString())
 			.attr("data-show-nav", showNav.toString())
-			.attr("data-show-arrows", showArrows.toString())
-			.attr("data-enable-zoom", enableZoom.toString());
+			.attr("data-show-arrows", showArrows.toString());
 
 		const $navGroup = $("<div>").addClass("carousel-nav-group");
-		const $imageContainer = $("<div>").addClass("carousel-image-container");
+		const $imageContainer = $("<div>")
+			.addClass("carousel-image-container")
+			.attr("data-enable-zoom", enableZoom.toString());
 		this.addPauseAutoAdvance($imageContainer, imageTimeoutKey);
 
 		// Gather all children between start and end markers
@@ -316,7 +307,7 @@ class CarouselWrapper {
 
 	updateCarousel(imageTimeoutKey, newIdx) {
 		const { items, navItems, timeout } = this.carouselTimeoutsMap[imageTimeoutKey]
-
+		
 		if (timeout) {
 			clearTimeout(timeout);
 		}
@@ -327,14 +318,15 @@ class CarouselWrapper {
 			$(navItems[idx]).attr("data-nav-selected", selectedStr);
 		});
 		this.carouselTimeoutsMap[imageTimeoutKey].currentIdx = newIdx;
-		
+
 		const timeoutObject = this.carouselTimeoutsMap[imageTimeoutKey];
+		const isHovered = timeoutObject.$root.attr("data-carousel-zoomer-hovered") === "true";
 		const autoAdvance = timeoutObject.$root.attr("data-auto-advance") === "true";
 		const autoAdvanceTimoutSeconds = parseInt(
 			timeoutObject.$root.attr("data-auto-advance-timeout-s") || "10"
 		);
 
-		if(autoAdvance) {
+		if(!isHovered && autoAdvance) {
 			this.carouselTimeoutsMap[imageTimeoutKey].timeout = setTimeout(() => {
 				if (items.length === 0) { return; }
 
@@ -388,7 +380,7 @@ class CarouselWrapper {
 		$zoomerTarget.on("mousemove", (e) => {
 			const isHovered = $zoomerTarget.attr("data-carousel-zoomer-hovered") === "true";
 			const shouldZoom = $zoomerTarget
-				.closest(".custom-carousel")
+				.closest(".carousel-image-container")
 				.attr("data-enable-zoom") === "true";
 
 			if (!isHovered || !shouldZoom) { 
