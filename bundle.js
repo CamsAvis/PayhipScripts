@@ -304,9 +304,11 @@ const initProductPageNav = () => {
 		$heading.attr("id", text)
 			.addClass("heading-link")
 			.on("click", function () {
-				const url = `${window.location.origin}${window.location.pathname}#${heading.id}`;
+				const id = $(this).attr("id");
+
+				const url = `${window.location.origin}${window.location.pathname}#${id}`;
 				navigator.clipboard.writeText(url);
-				window.location.hash = heading.id;
+				window.location.hash = id;
 			});
 
 		const $headerListItem = $("<li>").appendTo($productDescriptionNavigation);
