@@ -403,13 +403,12 @@ function initCarousel($start) {
 		$current.remove();
 	}
 
-	const currentTimeoutObject = {
+	carouselTimeoutsDict[imageTimeoutKey] = {
 		items: imgItems,
 		navItems: navItems,
 		currentIdx: 0,
 		timeout: undefined
 	};
-	carouselTimeoutsDict[imageTimeoutKey] = currentTimeoutObject;
 
 	// Prev button
 	$("<div>")
@@ -460,7 +459,7 @@ const updateCarousel = (imageTimeoutKey, newIdx) => {
 		$el.attr("data-carousel-selected", selectedStr);
 		$(navItems[idx]).attr("data-nav-selected", selectedStr);
 	});
-	carouselTimeoutsDict[imageTimeoutKey] = newIdx;
+	carouselTimeoutsDict[imageTimeoutKey].currentIdx = newIdx;
 
 	carouselTimeoutsDict[imageTimeoutKey].timeout = setTimeout(() => {
 		if (items.length === 0) { return; }
