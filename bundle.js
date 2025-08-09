@@ -368,21 +368,21 @@ function initCarousel($start) {
 	let navItems = [];
 	let navItemIdx = 0;
 	while ($current.length && !isCarouselEnd($current)) {
-		const isFirst = $current.is($start);
+		let isFirst = $current.is($start);
 
 		$current.find("img").each(function () {
 			const $img = $(this);
   		const currentIndex = navItemIdx;
 
 			$img.addClass("zoom-target")
-				.attr("data-carousel-selected", isFirst.toString())
+				.attr("data-carousel-selected", isFirst ? "true" : "false")
 				.appendTo($start);
 
 			addImageZoomer($img, imageTimeoutKey);
 
 			const $navItem = $("<div>")
 				.addClass("nav-item")
-				.attr("data-nav-selected", isFirst.toString())
+				.attr("data-nav-selected", isFirst ? "true" : "false")
 				.on("click", function () {
 					updateCarousel(imageTimeoutKey, currentIndex);
 				})
@@ -391,6 +391,7 @@ function initCarousel($start) {
 			imgItems.push($img);
 			navItems.push($navItem);
 
+			isFirst = false;
 			navItemIdx++;
 		})
 
