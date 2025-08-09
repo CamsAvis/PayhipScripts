@@ -17,12 +17,12 @@ class CarouselWrapper {
 	}
 
 	initCarousels() {
-		$(".product-description > *").each(function () {
-			if ($(this).text().trim() !== "%%CAROUSEL_START%%") {
+		$(".product-description > *").each((_, element) => {
+			if (element.text().trim() !== "%%CAROUSEL_START%%") {
 				return;
 			}
 
-			initCarousel($(this));
+			this.initCarousel(element);
 		});
 	}
 
@@ -42,21 +42,20 @@ class CarouselWrapper {
 
 		let carouselTimeoutObject = CarouselTimeout.init();
 		while ($current.length && !isCarouselEnd($current)) {
-			$current.find("img").each(function () {
-				const $img = $(this);
+			$current.find("img").each((_, $img) => {
 				const currentIndex = navItemIdx;
 
 				$img.addClass("zoom-target")
 					.attr("data-carousel-selected", navItemIdx === 0 ? "true" : "false")
 					.appendTo($start);
 
-				addImageMagnifierOnHover($img, imageTimeoutKey);
+				this.addImageMagnifierOnHover($img, imageTimeoutKey);
 
 				const $navItem = $("<div>")
 					.addClass("nav-item")
 					.attr("data-nav-selected", navItemIdx === 0 ? "true" : "false")
 					.attr("id", )
-					.on("click", function () {
+					.on("click", () => {
 						updateCarousel(imageTimeoutKey, currentIndex);
 					})
 					.appendTo($navGroup);
@@ -65,7 +64,7 @@ class CarouselWrapper {
 				carouselTimeoutObject.navItems.push($navItem);
 
 				navItemIdx++;
-			})
+			});
 
 			const $next = $current.next();
 			$current.remove();
@@ -159,12 +158,12 @@ class CarouselWrapper {
 	addImageMagnifierOnHover($zoomerTarget, imageTimeoutKey) {
 		$zoomerTarget.attr("data-carousel-zoomer-hovered", "false");
 
-		$zoomerTarget.on("mouseenter", function () {
+		$zoomerTarget.on("mouseenter", () => {
 			$zoomerTarget.attr("data-carousel-zoomer-hovered", "true");
 			pauseTimeout(imageTimeoutKey);
 		})
 
-		$zoomerTarget.on("mousemove", function (e) {
+		$zoomerTarget.on("mousemove", (e) => {
 			const isHovered = $zoomerTarget.attr("data-carousel-zoomer-hovered") === "true";
 			if (!isHovered) { return; }
 
@@ -178,7 +177,7 @@ class CarouselWrapper {
 			})
 		});
 
-		$zoomerTarget.on("mouseleave", function () {
+		$zoomerTarget.on("mouseleave", () => {
 			$zoomerTarget.attr("data-carousel-zoomer-hovered", "false");
 
 			$zoomerTarget.css({
@@ -193,7 +192,7 @@ class CarouselWrapper {
 
 
 if (document.body.id === "page-product") {
-	$(document).ready(function() {
+	$(document).ready(() => {
 		const carouselWrapper = new CarouselWrapper();
 		carouselWrapper.initCarousel();
 	});
