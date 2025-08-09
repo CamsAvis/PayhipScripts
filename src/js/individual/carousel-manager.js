@@ -38,7 +38,7 @@ class CarouselWrapper {
 		const $navGroup = $("<div>").addClass("carousel-nav-group");
 
 		// Gather all children between start and end markers
-		let $current = $($root).next();
+		let $current = $root.next();
 		let navItemIdx = 0;
 
 		let carouselTimeoutObject = CarouselTimeout.init();
@@ -56,9 +56,8 @@ class CarouselWrapper {
 				const $navItem = $("<div>")
 					.addClass("nav-item")
 					.attr("data-nav-selected", navItemIdx === 0 ? "true" : "false")
-					.attr("id", )
 					.on("click", () => {
-						updateCarousel(imageTimeoutKey, currentIndex);
+						this.updateCarousel(imageTimeoutKey, currentIndex);
 					})
 					.appendTo($navGroup);
 
@@ -74,7 +73,7 @@ class CarouselWrapper {
 		}
 
 		// remove the %%CAROUSEL_END%% text from the DOM
-		if(isCarouselEnd($current)) {
+		if(this.isCarouselEnd($current)) {
 			$current.remove();
 		}
 
@@ -91,7 +90,7 @@ class CarouselWrapper {
 				let newImgIdx = (currentIdx - 1) % items.length;
 				newImgIdx = newImgIdx < 0 ? items.length - 1 : newImgIdx;
 
-				updateCarousel(imageTimeoutKey, newImgIdx);
+				this.updateCarousel(imageTimeoutKey, newImgIdx);
 			})
 			.appendTo($root);
 
@@ -104,7 +103,7 @@ class CarouselWrapper {
 				if (items.length === 0) { return; }
 
 				let newImgIdx = (currentIdx + 1) % items.length;
-				updateCarousel(imageTimeoutKey, newImgIdx);
+				this.updateCarousel(imageTimeoutKey, newImgIdx);
 			})
 			.appendTo($root);
 
@@ -112,7 +111,7 @@ class CarouselWrapper {
 		$root.append($navGroup);
 
 		// start the carousel
-		updateCarousel(imageTimeoutKey, 0);
+		this.updateCarousel(imageTimeoutKey, 0);
 	}
 
 	updateCarousel(imageTimeoutKey, newIdx) {
@@ -135,7 +134,7 @@ class CarouselWrapper {
 			let nextImgIdx = (newIdx + 1) % items.length;
 			this.carouselTimeoutsMap[imageTimeoutKey].currentIdx = nextImgIdx;
 
-			updateCarousel(imageTimeoutKey, nextImgIdx)
+			this.updateCarousel(imageTimeoutKey, nextImgIdx)
 		}, 10 * 1000);
 	}
 
@@ -154,7 +153,7 @@ class CarouselWrapper {
 			return;
 		}
 
-		updateCarousel(imageTimeoutKey, timeoutObject.currentIdx);
+		this.updateCarousel(imageTimeoutKey, timeoutObject.currentIdx);
 	}
 
 	addImageMagnifierOnHover($zoomerTarget, imageTimeoutKey) {
@@ -162,7 +161,7 @@ class CarouselWrapper {
 
 		$zoomerTarget.on("mouseenter", () => {
 			$zoomerTarget.attr("data-carousel-zoomer-hovered", "true");
-			pauseTimeout(imageTimeoutKey);
+			this.pauseTimeout(imageTimeoutKey);
 		})
 
 		$zoomerTarget.on("mousemove", (e) => {
@@ -187,7 +186,7 @@ class CarouselWrapper {
 				transform: "scale(1)"
 			});
 
-			resumeTimeout(imageTimeoutKey);
+			this.resumeTimeout(imageTimeoutKey);
 		});
 	}
 }
