@@ -32,9 +32,33 @@ class CarouselWrapper {
 		return $item.text().trim() === "%%CAROUSEL_END%%";
 	}
 
+	isInViewport($element) {
+    var elementTop = $element.offset().top;
+    var elementBottom = elementTop + $element.outerHeight();
+
+    var viewportTop = $(window).scrollTop();
+    var viewportBottom = viewportTop + $(window).height();
+
+    return elementBottom > viewportTop && elementTop < viewportBottom;
+};
+
 	initCarousel($root) {
 		let imageTimeoutKey = crypto.randomUUID();
+		
+		// pause auto rotations when off screen
+		$(window).on("resize scroll", (_,el) => {
+			const $el = $(el);
 
+			const currentTimeout = this.carouselTimeoutsMap[imageTimeoutKey].timeout;
+			const inView = this.isInViewport($el);
+			if(inView && !currentTimeout) {
+				this.resumeTimeout(imageTimeoutKey);
+			} else if(!inView) {
+				this.pauseTimeout(imageTimeoutKey);
+			}
+		})
+
+		// Init carousel stuff
 		$root.html("").addClass("custom-carousel");
 		const $navGroup = $("<div>").addClass("carousel-nav-group");
 
@@ -110,9 +134,6 @@ class CarouselWrapper {
 
 		// add the nav
 		$root.append($navGroup);
-
-		// start the carousel
-		this.updateCarousel(imageTimeoutKey, 0);
 	}
 
 	updateCarousel(imageTimeoutKey, newIdx) {

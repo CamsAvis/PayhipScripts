@@ -40,7 +40,7 @@ jobs:
         $DEPLOY_PATH = "$PWD\deployment"
         $COMBINED_CSS_PATH = Join-Path $DEPLOY_PATH "bundle.css"
         New-Item -ItemType File -Path $COMBINED_CSS_PATH -Force | Out-Null
-        Get-ChildItem -Path "$PWD\src\css\bundle" -Filter *.css -File -Recurse |
+        Get-ChildItem -Path "$PWD\src\css" -Filter *.css -File -Recurse |
           Sort-Object Name |
           ForEach-Object {
             Get-Content $_.FullName | Add-Content -Path $COMBINED_CSS_PATH
@@ -57,7 +57,7 @@ jobs:
         $COMBINED_JS_PATH = Join-Path $DEPLOY_PATH "bundle.js"
         New-Item -ItemType File -Path $COMBINED_JS_PATH -Force | Out-Null
 
-        Get-ChildItem -Path "$PWD\src\js\bundle" -Filter *.js -File -Recurse |
+        Get-ChildItem -Path "$PWD\src\js" -Filter *.js -File -Recurse |
           Sort-Object Name |
           ForEach-Object {
             Get-Content $_.FullName | Add-Content -Path $COMBINED_JS_PATH
