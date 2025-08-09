@@ -168,7 +168,8 @@ class CarouselWrapper {
 				autoAdvanceTimeoutSeconds,
 				showNav,
 				showArrows,
-				enableZoom
+				enableZoom,
+				pauseOnHover
 			);
 		});
 
@@ -217,7 +218,7 @@ class CarouselWrapper {
 			);
 	}
 
-	initCarousel($root, autoAdvance, autoAdvanceTimeoutSeconds, showNav, showArrows, enableZoom) {
+	initCarousel($root, autoAdvance, autoAdvanceTimeoutSeconds, showNav, showArrows, enableZoom, pauseOnHover) {
 		let imageTimeoutKey = crypto.randomUUID();
 		
 		// Init carousel stuff
@@ -233,7 +234,7 @@ class CarouselWrapper {
 		const $imageContainer = $("<div>")
 			.addClass("carousel-image-container")
 			.attr("data-enable-zoom", enableZoom.toString())
-			.attr("data-pause-on-hover", enableZoom.toString());
+			.attr("data-pause-on-hover", pauseOnHover.toString());
 		this.addPauseAutoAdvance($imageContainer, imageTimeoutKey);
 
 		// Gather all children between start and end markers
