@@ -1,20 +1,20 @@
 class CarouselTimeout {
-	constructor(items, navItems, currentIdx, timeout) {
+	constructor(items, navItems, currentIdx, timeout, $root) {
 		this.items = items;
 		this.navItems = navItems;
 		this.currentIdx = currentIdx;
 		this.timeout = timeout;
+		this.$root = $root;
 	}
 
 	static init() {
-		return new CarouselTimeout([], [], 0, undefined);
+		return new CarouselTimeout([], [], 0, undefined, undefined);
 	}
 }
 
 class CarouselWrapper {
 	constructor() { 
 		this.carouselTimeoutsMap = { };
-		this.$root = undefined;
 	}
 
 	initCarousels() {
@@ -46,8 +46,6 @@ class CarouselWrapper {
 						break;
 				}
 			}
-
-			this.$root = $element
 
 			this.initCarousel(
 				$element,
@@ -101,7 +99,7 @@ class CarouselWrapper {
 		let $current = $($root).next();
 		let navItemIdx = 0;
 
-		let carouselTimeoutObject = CarouselTimeout.init();
+		let carouselTimeoutObject = new CarouselTimeout([], [], 0, undefined, $root);
 		while ($current.length && !this.isCarouselEnd($current)) {
 			$current.find("img").each((_, img) => {
 				const $img = $(img);
@@ -187,10 +185,11 @@ class CarouselWrapper {
 			$(navItems[idx]).attr("data-nav-selected", selectedStr);
 		});
 		this.carouselTimeoutsMap[imageTimeoutKey].currentIdx = newIdx;
-
-		const autoAdvance = this.$root.attr("data-auto-advance") === "true";
+		
+		const timeoutObject = this.carouselTimeoutsMap[imageTimeoutKey];
+		const autoAdvance = timeoutObject.$root.attr("data-auto-advance") === "true";
 		const autoAdvanceTimoutSeconds = parseInt(
-			this.$root.attr("data-auto-advance-timeout-s") || "10"
+			timeoutObject.$root.attr("data-auto-advance-timeout-s") || "10"
 		);
 
 		if(autoAdvance) {
