@@ -68,7 +68,7 @@ jobs:
     - name: Minify JS
       run: terser deployment/bundle.js -o deployment/bundle.min.js -c -m
 
-    - name: Publish individualped js files
+    - name: Publish individual js files
       shell: pwsh
       run: |
         $deployIndividual = Join-Path $PWD "deployment/individual"
@@ -77,7 +77,7 @@ jobs:
           Copy-Item $_.FullName -Destination $deployIndividual
         }
 
-    - name: Publish individualped css files
+    - name: Publish individual css files
       shell: pwsh
       run: |
         $deployIndividual = Join-Path $PWD "deployment/individual"
