@@ -344,7 +344,7 @@ let carouselTimeoutsDict = {
 }
 
 const addCarousels = () => {
-	$("product-description > p").each(function () {
+	$(".product-description > p").each(function () {
 		if($(this).text().trim() !== "%%CAROUSEL_START%%") {
 			return;
 		}
