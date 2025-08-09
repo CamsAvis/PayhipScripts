@@ -119,8 +119,6 @@ const updateCarousel = (imageTimeoutKey, newIdx) => {
 		clearTimeout(timeout);
 	}
 
-	carouselTimeoutsDict[imageTimeoutKey].currentIdx = newIdx;
-
 	items.forEach(($el, idx) => {
 		const selectedStr = (idx === newIdx).toString();
 		$el.attr("data-carousel-selected", selectedStr);

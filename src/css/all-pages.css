@@ -245,17 +245,17 @@ h4 strong {
   color: white;
   top: 50%;
 	cursor: pointer;
+	
+	&:hover {
+		background-color: rgba(12,12,12,0.5);
+	}
 }
 
-.carousel-navigator-arrow:hover {
-	background-color: rgba(12,12,12,0.5);
-}
-
-.carousel-last {
+.carousel-navigator-arrow-last {
   left: 0;
 }
 
-.carousel-next {
+.carousel-navigator-arrow-next {
   right: 0;
 }
 
