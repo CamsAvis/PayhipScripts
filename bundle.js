@@ -140,6 +140,7 @@ class CarouselWrapper {
 			let showNav = true;
 			let showArrows = true;
 			let enableZoom = true;
+			let pauseOnHover = true;
 			let autoAdvanceTimeoutSeconds = 10;
 
 			let match;
@@ -153,6 +154,7 @@ class CarouselWrapper {
 						case "show-arrows": showArrows = value === "true"; break;
 						case "enable-zoom": enableZoom = value === "true"; break;
 						case "auto-advance": autoAdvance = value === "true"; break;
+						case "pause-on-hover": pauseOnHover = value === "true"; break;
 						case "auto-advance-speed-s": autoAdvanceTimeoutSeconds = parseInt(value); break;
 					}
 				} catch(e) {
@@ -230,7 +232,8 @@ class CarouselWrapper {
 		const $navGroup = $("<div>").addClass("carousel-nav-group");
 		const $imageContainer = $("<div>")
 			.addClass("carousel-image-container")
-			.attr("data-enable-zoom", enableZoom.toString());
+			.attr("data-enable-zoom", enableZoom.toString())
+			.attr("data-pause-on-hover", enableZoom.toString());
 		this.addPauseAutoAdvance($imageContainer, imageTimeoutKey);
 
 		// Gather all children between start and end markers
@@ -366,10 +369,14 @@ class CarouselWrapper {
 		$element.attr("data-carousel-zoomer-hovered", "false");
 
 		$element.on("mouseenter", () => {
+			if($element.attr("data-pause-on-hover") === "false") {
+				return;
+			}
+			
 			$element.attr("data-carousel-zoomer-hovered", "true");
 			this.pauseTimeout(imageTimeoutKey);
 		})
-
+		
 		$element.on("mouseleave", () => {
 			$element.attr("data-carousel-zoomer-hovered", "false");
 
