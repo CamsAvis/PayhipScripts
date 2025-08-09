@@ -6,7 +6,6 @@ on:
       - master
     paths:
       - 'src/**'
-      - 'html/includes.html'
       - '.github/workflows/deploy.yml'
 
 jobs:
@@ -35,7 +34,7 @@ jobs:
       shell: pwsh
       run: |
         $DEPLOY_PATH = "$PWD\deployment"
-        $COMBINED_CSS_PATH = Join-Path $DEPLOY_PATH "combined_css.css"
+        $COMBINED_CSS_PATH = Join-Path $DEPLOY_PATH "bundle.css"
         New-Item -ItemType File -Path $COMBINED_CSS_PATH -Force | Out-Null
         Get-ChildItem -Path "$PWD\src" -Filter *.css -File -Recurse |
           Sort-Object Name |
@@ -48,19 +47,15 @@ jobs:
       shell: pwsh
       run: |
         $DEPLOY_PATH = "$PWD\deployment"
-        $COMBINED_HTML_PATH = Join-Path $DEPLOY_PATH "combined_html.html"
-        New-Item -ItemType File -Path $COMBINED_HTML_PATH -Force | Out-Null
+        $COMBINED_JS_PATH = Join-Path $DEPLOY_PATH "bundle.js"
+        New-Item -ItemType File -Path $COMBINED_JS_PATH -Force | Out-Null
 
-        Get-Content "$PWD\src\html\includes.html" | Set-Content -Path $COMBINED_HTML_PATH
-
-        Add-Content -Path $COMBINED_HTML_PATH -Value "<script>`r`n"
         Get-ChildItem -Path "$PWD\src\js" -Filter *.js -File -Recurse |
           Sort-Object Name |
           ForEach-Object {
-            Get-Content $_.FullName | Add-Content -Path $COMBINED_HTML_PATH
-            Add-Content -Path $COMBINED_HTML_PATH -Value "`r`n"
+            Get-Content $_.FullName | Add-Content -Path $COMBINED_JS_PATH
+            Add-Content -Path $COMBINED_JS_PATH -Value "`r`n"
           }
-        Add-Content -Path $COMBINED_HTML_PATH -Value "</script>"
 
     - name: Deploy deployment folder to gh-pages branch
       uses: peaceiris/actions-gh-pages@v4
