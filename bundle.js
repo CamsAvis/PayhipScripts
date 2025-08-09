@@ -337,7 +337,7 @@ if (document.body.id === "page-product") {
 let carouselTimeoutsDict = {
 	"example": {
 		items: [],
-		$navItems: [],
+		navItems: [],
 		currentIdx: 0,
 		timeout: 0
 	}
@@ -364,8 +364,8 @@ function initCarousel($start) {
 
 	// Gather all children between start and end markers
 	let $current = $($start).next();
-	let $carouselItems = [];
-	let $navItems = [];
+	let imgItems = [];
+	let navItems = [];
 	let navItemIdx = 0;
 	while ($current.length && !isCarouselEnd($current)) {
 		const isFirst = $current.is($start);
@@ -387,8 +387,8 @@ function initCarousel($start) {
 				})
 				.appendTo($navGroup);
 
-			$carouselItems.push($img);
-			$navItems.push($navItem);
+			imgItems.push($img);
+			navItems.push($navItem);
 
 			navItemIdx++;
 		})
@@ -404,8 +404,8 @@ function initCarousel($start) {
 	}
 
 	const currentTimeoutObject = {
-		items: $carouselItems,
-		$navItems: $navItems,
+		items: imgItems,
+		navItems: navItems,
 		currentIdx: 0,
 		timeout: undefined
 	};
@@ -449,7 +449,7 @@ function initCarousel($start) {
 }
 
 const updateCarousel = (imageTimeoutKey, newIdx) => {
-	const { items, $navItems, timeout } = carouselTimeoutsDict[imageTimeoutKey]
+	const { items, navItems, timeout } = carouselTimeoutsDict[imageTimeoutKey]
 
 	if (timeout) {
 		clearTimeout(timeout);
@@ -458,7 +458,7 @@ const updateCarousel = (imageTimeoutKey, newIdx) => {
 	items.forEach(($el, idx) => {
 		const selectedStr = (idx === newIdx).toString();
 		$el.attr("data-carousel-selected", selectedStr);
-		$navItems.eq(idx).attr("data-nav-selected", selectedStr);
+		navItems.eq(idx).attr("data-nav-selected", selectedStr);
 	});
 
 	carouselTimeoutsDict[imageTimeoutKey].timeout = setTimeout(() => {
