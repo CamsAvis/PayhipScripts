@@ -99,7 +99,7 @@ function initCarousel($start) {
 			const { currentIdx, items } = carouselTimeoutsDict[imageTimeoutKey]
 			if (items.length === 0) { return; }
 
-			let newImgIdx = (currentIdx + 1) % items.length;
+			// let newImgIdx = (currentIdx + 1) % items.length;
 			// updateCarousel(imageTimeoutKey, newImgIdx);
 		})
 		.appendTo($start);
