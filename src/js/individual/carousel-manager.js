@@ -10,11 +10,9 @@ let carouselTimeoutsDict = {
 const addCarousels = () => {
 	$(".product-description > *").each(function () {
 		if ($(this).text().trim() !== "%%CAROUSEL_START%%") {
-			console.log("not a carousel");
 			return;
 		}
 
-		console.log("found carousel");
 		initCarousel($(this));
 	});
 }
