@@ -8,8 +8,8 @@ let carouselTimeoutsDict = {
 }
 
 const addCarousels = () => {
-	$("product-description :contains('%%CAROUSEL_START%%')").each(function () {
-		if(!$(this).html().includes("%%CAROUSEL_START%%")) {
+	$("product-description p").each(function () {
+		if($(this).text() !== "%%CAROUSEL_START%%") {
 			return;
 		}
 
