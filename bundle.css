@@ -243,19 +243,19 @@ h4 strong, h4 em {
 }
 
 
-.custom-carousel["data-show-arrows='true'"] .carousel-navigator-arrow {
+.custom-carousel[data-show-arrows="true"] .carousel-navigator-arrow {
 	display: block;
 }
 
-.custom-carousel["data-show-arrows='false'"] .carousel-navigator-arrow {
+.custom-carousel[data-show-arrows="false"] .carousel-navigator-arrow {
 	display: none;
 }
 
-.custom-carousel["data-show-nav='true'"] .carousel-nav-group {
+.custom-carousel[data-show-nav="true"] .carousel-nav-group {
 	display: block;
 }
 
-.custom-carousel["data-show-nav='false'"] .carousel-nav-group {
+.custom-carousel[data-show-nav="false"] .carousel-nav-group {
 	display: none;
 }
 
