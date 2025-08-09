@@ -372,13 +372,13 @@ function initCarousel($start) {
 
 		$current.find("img").each(function () {
 			const $img = $(this);
-  		const currentIndex = navItemIdx;  // capture current index
+  		const currentIndex = navItemIdx;
 
 			$img.addClass("zoom-target")
 				.attr("data-carousel-selected", isFirst.toString())
 				.appendTo($start);
 
-			addImageZoomer($img);
+			addImageZoomer($img, $imageTimeoutKey);
 
 			const $navItem = $("<div>")
 				.addClass("nav-item")
