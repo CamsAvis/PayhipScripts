@@ -60,7 +60,7 @@ class CarouselWrapper {
 		$(window).on("resize scroll", () => {
 			$(".custom-carousel").each((_, el) => {
 				const $el = $(el);
-				const key = $el.attr("data-timeout-key");
+				const key = $el.attr("id");
 
 				const currentTimeout = this.carouselTimeoutsMap[key]?.timeout;
 				const inView = this.isInViewport($el);
