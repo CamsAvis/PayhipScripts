@@ -283,9 +283,7 @@ class CarouselWrapper {
 		$root.append($navGroup);
 
 		// start
-		if (this.isInViewport($root)) {
-			this.resumeTimeout(imageTimeoutKey);
-		}
+		this.updateCarousel(imageTimeoutKey, 0);
 	}
 
 	updateCarousel(imageTimeoutKey, newIdx) {
