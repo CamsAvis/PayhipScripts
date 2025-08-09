@@ -13,6 +13,7 @@ const addCarousels = () => {
 			return;
 		}
 
+		console.log("found carousel");
 		initCarousel($(this));
 	});
 }
