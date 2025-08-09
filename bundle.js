@@ -490,13 +490,15 @@ const resumeTimeout = (imageTimeoutKey) => {
 }
 
 function addImageZoomer($zoomerTarget, imageTimeoutKey) {
-	let isHovered = false;
+	$zoomerTarget.attr("data-carousel-zoomer-hovered", "false");
+	
 	$zoomerTarget.on("mouseenter", function () {
-		isHovered = true;
+		$zoomerTarget.attr("data-carousel-zoomer-hovered", "true");
 		pauseTimeout(imageTimeoutKey);
 	})
 
-	$zoomerTarget.on('mousemove', function (e) {
+	$zoomerTarget.on("mousemove", function (e) {
+		const isHovered = $zoomerTarget.attr("data-carousel-zoomer-hovered") === "true";
 		if (!isHovered) { return; }
 
 		const rect = $zoomerTarget[0].getBoundingClientRect();
@@ -505,16 +507,16 @@ function addImageZoomer($zoomerTarget, imageTimeoutKey) {
 
 		$zoomerTarget.css({
 			transformOrigin: `${x}% ${y}%`,
-			transform: 'scale(2)'
+			transform: "scale(2)"
 		})
 	});
 
-	$zoomerTarget.on('mouseleave', function () {
-		isHovered = false;
+	$zoomerTarget.on("mouseleave", function () {
+		$zoomerTarget.attr("data-carousel-zoomer-hovered", "false");
 
 		$zoomerTarget.css({
-			transformOrigin: 'center center',
-			transform: 'scale(1)'
+			transformOrigin: "center center",
+			transform: "scale(1)"
 		});
 
 		resumeTimeout(imageTimeoutKey);
