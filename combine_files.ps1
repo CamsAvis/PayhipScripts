@@ -13,10 +13,7 @@ $COMBINED_HTML_PATH = "$PSScriptRoot\combined_html.html"
 New-Item -ItemType File -Path $COMBINED_HTML_PATH -Force | Out-Null
 
 # Add other links
-Add-Content -Path $COMBINED_HTML_PATH -Value @"
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-"@
+Get-Content "$PSScriptRoot/html/includes.html" | Set-Content -Path $COMBINED_HTML_PATH
 
 Add-Content -Path $COMBINED_HTML_PATH -Value "<script>`r`n"
 Get-ChildItem -Path "$PSScriptRoot/src/js" -Filter *.js -File -Recurse `
