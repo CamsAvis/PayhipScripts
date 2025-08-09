@@ -89,7 +89,7 @@ class CarouselWrapper {
 		// Init carousel stuff
 		$root.html("")
 			.addClass("custom-carousel")
-			.id(imageTimeoutKey)
+			.attr("id", imageTimeoutKey)
 			.attr("data-auto-advance", autoAdvance.toString())
 			.attr("data-auto-advance-timeout-s", autoAdvanceTimeoutSeconds.toString())
 
