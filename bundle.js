@@ -372,6 +372,7 @@ function initCarousel($start) {
 
 		$current.find("img").each(function () {
 			const $img = $(this);
+  		const currentIndex = navItemIdx;  // capture current index
 
 			$img.addClass("zoom-target")
 				.attr("data-carousel-selected", isFirst.toString())
@@ -383,7 +384,7 @@ function initCarousel($start) {
 				.addClass("nav-item")
 				.attr("data-nav-selected", isFirst.toString())
 				.on("click", function () {
-					updateCarousel(imageTimeoutKey, navItemIdx);
+					updateCarousel(imageTimeoutKey, currentIndex);
 				})
 				.appendTo($navGroup);
 
@@ -472,7 +473,7 @@ const updateCarousel = (imageTimeoutKey, newIdx) => {
 }
 
 const pauseTimeout = (imageTimeoutKey) => {
-	if (!carouselTimeoutsDict[imageTimeoutKey]?.timeout) {
+	if (carouselTimeoutsDict[imageTimeoutKey]?.timeout === undefined) {
 		return;
 	}
 
@@ -482,7 +483,7 @@ const pauseTimeout = (imageTimeoutKey) => {
 
 const resumeTimeout = (imageTimeoutKey) => {
 	const timeoutObject = carouselTimeoutsDict[imageTimeoutKey];
-	if (timeoutObject?.timeout) {
+	if (timeoutObject?.timeout !== undefined) {
 		return;
 	}
 
@@ -491,7 +492,7 @@ const resumeTimeout = (imageTimeoutKey) => {
 
 function addImageZoomer($zoomerTarget, imageTimeoutKey) {
 	$zoomerTarget.attr("data-carousel-zoomer-hovered", "false");
-	
+
 	$zoomerTarget.on("mouseenter", function () {
 		$zoomerTarget.attr("data-carousel-zoomer-hovered", "true");
 		pauseTimeout(imageTimeoutKey);
