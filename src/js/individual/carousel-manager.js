@@ -17,8 +17,7 @@ class CarouselWrapper {
 	}
 
 	initCarousels() {
-		$(".product-description > *").each((_, element) => {
-			const $element = $(element);
+		$(".product-description > *").each((_, $element) => {
 			if ($element.text().trim() !== "%%CAROUSEL_START%%") {
 				return;
 			}
@@ -195,6 +194,6 @@ class CarouselWrapper {
 if (document.body.id === "page-product") {
 	$(document).ready(() => {
 		const carouselWrapper = new CarouselWrapper();
-		carouselWrapper.initCarousel();
+		carouselWrapper.initCarousels();
 	});
 }
