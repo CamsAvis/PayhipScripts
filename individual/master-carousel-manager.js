@@ -244,10 +244,16 @@ class CarouselWrapper {
 	}
 
 	addImageMagnifierOnHover($zoomerTarget) {
-		$zoomerTarget.attr("data-carousel-zoomer-hovered", "false")
+		$zoomerTarget
+			.attr("data-carousel-zoomer-hovered", "false")
 			.on("mousemove", (e) => {
-				const isHovered = $zoomerTarget.attr("data-carousel-zoomer-hovered") === "true";
-				if (!isHovered) { return; }
+				const isHovered = $zoomerTarget
+					.closest('[data-carousel-zoomer-hovered]')
+					.attr("data-carousel-zoomer-hovered") === "true";
+
+				if (!isHovered) { 
+					return; 
+				}
 
 				const rect = $zoomerTarget[0].getBoundingClientRect();
 				const x = ((e.clientX - rect.left) / rect.width) * 100;
