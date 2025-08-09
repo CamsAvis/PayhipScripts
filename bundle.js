@@ -226,9 +226,7 @@ class CarouselWrapper {
 			.attr("data-show-arrows", showArrows.toString());
 
 		const $imageContainer = $("<div>").addClass("carousel-image-container");
-		const $navGroup = $("<div>")
-			.addClass("carousel-nav-group")
-			.insertAfter($root);
+		const $navGroup = $("<div>").addClass("carousel-nav-group");
 
 		// Gather all children between start and end markers
 		let $current = $($root).next();
@@ -298,7 +296,7 @@ class CarouselWrapper {
 				this.updateCarousel(imageTimeoutKey, newImgIdx);
 			})
 
-		$root.append($prevArrow, $imageContainer, $nextArrow);
+		$root.append($prevArrow, $imageContainer, $nextArrow, $navGroup);
 
 		// start
 		this.updateCarousel(imageTimeoutKey, 0);
