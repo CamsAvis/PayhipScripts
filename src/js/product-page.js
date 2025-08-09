@@ -24,8 +24,7 @@ function initCarousel($start) {
 	let imageTimeoutKey = crypto.randomUUID();
 
 	$start.html("").addClass("custom-carousel");
-	const $navGroup = $("<div>").addClass("carousel-nav-group")
-		.appendTo($start);
+	const $navGroup = $("<div>").addClass("carousel-nav-group");
 
 	// Gather all children between start and end markers
 	let $current = $($start).next();
@@ -33,7 +32,7 @@ function initCarousel($start) {
 	let $navItems = [];
 	let navItemIdx = 0;
 	while ($current.length && !isCarouselEnd($current)) {
-		const isFirst = $current.is($start.next());
+		const isFirst = $current.is($start);
 
 		$current.find("img").each(function () {
 			const $img = $(this);
@@ -77,8 +76,9 @@ function initCarousel($start) {
 	carouselTimeoutsDict[imageTimeoutKey] = currentTimeoutObject;
 
 	// Prev button
-	$("<span>")
-		.addClass("carousel-last")
+	$("<div>")
+		.addClass("carousel-navigator-arrow")
+		.addClass("carousel-navigator-arrow-prev")
 		.html('<span class="material-symbols-outlined">arrow_back_ios</span>')
 		.on("click", () => {
 			const { currentIdx, items } = carouselTimeoutsDict[imageTimeoutKey]
@@ -92,8 +92,9 @@ function initCarousel($start) {
 		.appendTo($start);
 
 	// Next button
-	$("<span>")
-		.addClass("carousel-next")
+	$("<div>")
+		.addClass("carousel-navigator-arrow")
+		.addClass("carousel-navigator-arrow-next")
 		.html('<span class="material-symbols-outlined">arrow_forward_ios</span>')
 		.on("click", () => {
 			const { currentIdx, items } = carouselTimeoutsDict[imageTimeoutKey]
@@ -104,6 +105,10 @@ function initCarousel($start) {
 		})
 		.appendTo($start);
 
+	// add the nav
+	$start.append($navGroup);
+
+	// start the carousel
 	updateCarousel(imageTimeoutKey, 0);
 }
 
@@ -114,6 +119,8 @@ const updateCarousel = (imageTimeoutKey, newIdx) => {
 		clearTimeout(timeout);
 	}
 
+	carouselTimeoutsDict[imageTimeoutKey].currentIdx = newIdx;
+
 	items.forEach(($el, idx) => {
 		const selectedStr = (idx === newIdx).toString();
 		$el.attr("data-carousel-selected", selectedStr);
@@ -123,10 +130,10 @@ const updateCarousel = (imageTimeoutKey, newIdx) => {
 	carouselTimeoutsDict[imageTimeoutKey].timeout = setTimeout(() => {
 		if (items.length === 0) { return; }
 
-		let imgIdx = (newIdx + 1) % items.length;
-		carouselTimeoutsDict[imageTimeoutKey].currentIdx = imgIdx;
+		let nextImgIdx = (newIdx + 1) % items.length;
+		carouselTimeoutsDict[imageTimeoutKey].currentIdx = nextImgIdx;
 
-		updateCarousel(imageTimeoutKey, imgIdx)
+		updateCarousel(imageTimeoutKey, nextImgIdx)
 	}, 10 * 1000);
 }
 
