@@ -1,53 +1,61 @@
-if (document.body.id === "page-product") {
-	$(document).ready(addCarousels);
+let imageTimeoutsDict = {
+	"example": {
+		$items: [],
+		$navItems: [],
+		currentIdx: 0,
+		timeout: 0
+	}
 }
 
 const addCarousels = () => {
 	$("p strong em u").each(function () {
 		if ($(this).html().trim() === "%%CAROUSEL_START%%") {
-			initCarousel(this);
+			initCarousel($(this));
 		}
 	})
 }
 
-const isCarouselEnd = (item) => item.innerText.trim() !== "%%CAROUSEL_END%%"
+const isCarouselEnd = ($item) => $item.text().trim().toUpperCase() === "%%CAROUSEL_END%%";
 
 function initCarousel($start) {
-	$($start).html("").addClass("custom-carousel");
+	$start.html("").addClass("custom-carousel");
 	const $navGroup = $("<div>").addClass("carousel-nav-group")
 		.appendTo($start);
 
 	// Gather all children between start and end markers
 	let $current = $($start).next();
 	let $carouselItems = []
-	while (current && isCarouselEnd(current)) {
-		const isFirst = current === $start.next();
+	while ($current.length && !isCarouselEnd($current)) {
+		const isFirst = $current.is($start.next());
 
-		const $carouselEl = $(current).find("img")
-			.attr("data-coursel-selected", isFirst.toString())
-			.appendTo($start);
+		$current.find("img")
+			.attr("data-carousel-selected", isFirst.toString())
+			.each(function() {
+      	const $img = $(this);
 
-		if ($carouselEl.is("img")) {
-			$carouselEl.addClass("zoom-target");
-			addZoomer($carouselEl);
-		}
+				$img.addClass("zoom-target").appendTo($start);
+				addZoomer($img);
 
-		$navGroup.append(
-			$("<div>").addClass("nav-item").attr("data-nav-selected", isFirst.toString())
-		)
+				$navGroup.append(
+					$("<div>").addClass("nav-item").attr("data-nav-selected", isFirst.toString())
+				)
+				$carouselItems.push($img);
+			})
 
-		$carouselItems.push($carouselEl);
 		$current = $current.next();
 	}
 
-	let imageTimeout;
+	let imageTimeoutKey = crypto.randomUUID();
+	const currentTimeoutObject = {
+		$items: $carouselItems,
+		$navItems: $navGroup.children(),
+		currentIdx: 0,
+		timeout: undefined
+	};
+	imageTimeoutsDict[imageTimeoutKey] = currentTimeoutObject;
+
 	$navGroup.children().on("click", function () {
-		updateCarousel(
-			$carouselItems,
-			$navGroup.children(),
-			imageTimeout,
-			$(this).index()
-		);
+		updateCarousel(imageTimeoutKey, $(this).index());
 	});
 
 	// Prev button
@@ -55,9 +63,13 @@ function initCarousel($start) {
 		.addClass("carousel-last")
 		.html('<span class="material-symbols-outlined">arrow_back_ios</span>')
 		.on("click", () => {
-			let lastImageIdx = (imgIdx - 1) % items.length;
-			imgIdx = lastImageIdx < 0 ? items.length - 1 : lastImageIdx;
-			updateCarousel(items, imgIdx);
+			const { currentIdx, $items } = imageTimeoutsDict[imageTimeoutKey]
+			if($items.length === 0) { return; }
+
+			let newImgIdx = (currentIdx - 1) % $items.length;
+			newImgIdx = newImgIdx < 0 ? $items.length - 1 : newImgIdx;
+
+			updateCarousel(imageTimeoutKey, newImgIdx);
 		})
 		.appendTo($start);
 
@@ -66,57 +78,90 @@ function initCarousel($start) {
 		.addClass("carousel-next")
 		.html('<span class="material-symbols-outlined">arrow_forward_ios</span>')
 		.on("click", () => {
-			imgIdx = (imgIdx + 1) % items.length;
-			updateCarousel(items, imgIdx);
+			const { currentIdx, $items } = imageTimeoutsDict[imageTimeoutKey]
+			if($items.length === 0) { return; }
+
+			let newImgIdx = (currentIdx + 1) % $items.length;
+			updateCarousel(imageTimeoutKey, newImgIdx);
 		})
 		.appendTo($start);
-
-	console.log("Carousel initialized with", items.length, "items");
-	updateCarousel(items, 0);
+	
+	updateCarousel(imageTimeoutKey);
 }
 
-const updateCarousel = ($items, $navDivs, imageTimeout, imgIdx) => {
-	clearInterval(imageTimeout);
+const updateCarousel = (imageTimeoutKey, newIdx) => {
+	const { $items, $navItems, timeout } = imageTimeoutsDict[imageTimeoutKey]
 
-	$items.each(function (idx) {
-		const selectedStr = (idx === imgIdx).toString();
-		$items[i].attr("data-carousel-selected", selectedStr);
-		$navDivs[i].attr("data-nav-selected", selectedStr);
+	$items.each(function (idx, el) {
+		const selectedStr = (idx === newIdx).toString();
+		$(el).attr("data-carousel-selected", selectedStr);
+		$navItems.eq(idx).attr("data-nav-selected", selectedStr);
 	});
 
-	// 10 seconds
-	imageTimeout = setTimeout(() => {
-		imgIdx = (imgIdx + 1) % items.length;
-		updateCarousel(items, imgIdx);
+	if(timeout) {
+		clearTimeout(timeout);
+	}
+
+	imageTimeoutsDict[imageTimeoutKey].timeout = setTimeout(() => {
+		if($items.length === 0) { return; }
+		
+		let imgIdx = (newIdx + 1) % $items.length;
+		imageTimeoutsDict[imageTimeoutKey].currentIdx = imgIdx;
+
+		updateCarousel(imageTimeoutKey, imgIdx)
 	}, 10 * 1000);
 }
 
-function addZoomer($zoomerTarget) {
+const pauseTimeout = (imageTimeoutKey) => {
+	if(!imageTimeoutsDict[imageTimeoutKey]?.timeout) {
+		return;
+	}
+
+	clearTimeout(imageTimeoutsDict[imageTimeoutKey].timeout);
+	imageTimeoutsDict[imageTimeoutKey].timeout = undefined;
+}
+
+const resumeTimeout = (imageTimeoutKey) => {
+	const timeoutObject = imageTimeoutsDict[imageTimeoutKey];
+	if(timeoutObject?.timeout) {
+		return;
+	}
+
+	updateCarousel(imageTimeoutKey, timeoutObject.currentIdx);
+}
+
+function addZoomer($zoomerTarget, imageTimeoutKey) {
 	let isHovered = false;
 	$zoomerTarget.on("mouseenter", function() {
 		isHovered = true;
-		clearTimeout
+		pauseTimeout(imageTimeoutKey);
 	})
 
-	$zoomerTarget.addEventListener("mouseenter", () => {
-		isHovered = true;
-		clearTimeout(imageTimeout);
-	});
-
-	$zoomerTarget.addEventListener('mousemove', (e) => {
+	$zoomerTarget.on('mousemove', function(e) {
 		if (!isHovered) { return; }
 
 		const rect = $zoomerTarget.getBoundingClientRect();
 		const x = ((e.clientX - rect.left) / rect.width) * 100;
 		const y = ((e.clientY - rect.top) / rect.height) * 100;
-		$zoomerTarget.style.transformOrigin = `${x}% ${y}%`;
-		$zoomerTarget.style.transform = 'scale(2)';
+
+		$zoomerTarget.css({
+			transformOrigin: `${x}% ${y}%`,
+			transform: 'scale(2)'
+		})
 	});
 
-	$zoomerTarget.addEventListener('mouseleave', () => {
-		isHovered = false
-		$zoomerTarget.style.transform = 'scale(1)';
-		$zoomerTarget.style.transformOrigin = 'center center';
-		updateCarousel(images, imgIdx);
+	$zoomerTarget.on('mouseleave', function() {
+		isHovered = false;
+		
+		$zoomerTarget.css({
+			transformOrigin: 'center center',
+			transform: 'scale(1)'
+		});
+
+		resumeTimeout(imageTimeoutKey);
 	});
+}
+
+if (document.body.id === "page-product") {
+	$(document).ready(addCarousels);
 }

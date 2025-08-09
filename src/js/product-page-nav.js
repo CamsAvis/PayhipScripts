@@ -1,7 +1,3 @@
-if (document.body.id === "page-product") {
-	$(document).ready(initProductPageNav);
-}
-
 const initProductPageNav = () => {
 	const productDescription = document.querySelector("div.product-description");
 
@@ -46,4 +42,8 @@ const initProductPageNav = () => {
 			}
 		}
 	});
+}
+
+if (document.body.id === "page-product") {
+	$(document).ready(initProductPageNav);
 }
