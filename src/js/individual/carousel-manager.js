@@ -18,11 +18,12 @@ class CarouselWrapper {
 
 	initCarousels() {
 		$(".product-description > *").each((_, element) => {
-			if (element.text().trim() !== "%%CAROUSEL_START%%") {
+			const $element = $(element);
+			if ($element.text().trim() !== "%%CAROUSEL_START%%") {
 				return;
 			}
 
-			this.initCarousel(element);
+			this.initCarousel($element);
 		});
 	}
 
