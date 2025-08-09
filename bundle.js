@@ -378,7 +378,7 @@ function initCarousel($start) {
 				.attr("data-carousel-selected", isFirst.toString())
 				.appendTo($start);
 
-			addImageZoomer($img, $imageTimeoutKey);
+			addImageZoomer($img, imageTimeoutKey);
 
 			const $navItem = $("<div>")
 				.addClass("nav-item")
