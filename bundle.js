@@ -174,8 +174,14 @@ class CarouselWrapper {
 		$(window).on("resize scroll", () => {
 			$(".custom-carousel").each((_, el) => {
 				const $el = $(el);
+				
+				const $imageContainer = $el.closest(".carousel-image-container");
+				const isHovered = $imageContainer.attr("data-carousel-zoomer-hovered") === "true";
+				if(isHovered) {
+					return;
+				}
+				
 				const key = $el.attr("id");
-
 				const currentTimeout = this.carouselTimeoutsMap[key]?.timeout;
 				const inView = this.isElementCentered($el);
 				if(inView && !currentTimeout) {
