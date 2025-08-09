@@ -14,24 +14,27 @@ const initProductPageNav = () => {
 			.toLowerCase()
 			.replace(/\b\w/g, char => char.toUpperCase());
 
-		if (text.length > 0) {
-			$heading.attr("id", text).addClass("heading-link");
-			heading.on("click", function () {
+		if(text.length === 0) {
+			return;
+		}
+
+		$heading.attr("id", text)
+			.addClass("heading-link")
+			.on("click", function () {
 				const url = `${window.location.origin}${window.location.pathname}#${heading.id}`;
 				navigator.clipboard.writeText(url);
 				window.location.hash = heading.id;
 			});
 
-			const $headerListItem = $("<li>").appendTo($productDescriptionNavigation);
+		const $headerListItem = $("<li>").appendTo($productDescriptionNavigation);
 
-			const headerNavItem = $(`<a href="#${heading.id}">`)
-				.text(text)
-				.addClass("header-nav-item")
-				.appendTo($headerListItem);
+		$(`<a href="#${heading.id}">`)
+			.text(text)
+			.addClass("header-nav-item")
+			.appendTo($headerListItem);
 
-			if ($productDescription.length) {
-				$productDescriptionHeadingText.after($productDescriptionNavigation);
-			}
+		if ($productDescription.length) {
+			$productDescriptionHeadingText.after($productDescriptionNavigation);
 		}
 	});
 }
