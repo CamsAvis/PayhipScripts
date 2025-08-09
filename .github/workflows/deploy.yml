@@ -23,11 +23,16 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
 
+    - name: Setup Node.js and install minifiers
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - run: npm install -g clean-css-cli terser
+
     - name: Prepare deployment folder
       run: |
         if (Test-Path deployment) { Remove-Item -Recurse -Force deployment }
         New-Item -ItemType Directory -Path deployment
-
       shell: pwsh
 
     - name: Combine CSS into deployment folder
@@ -43,7 +48,10 @@ jobs:
             Add-Content -Path $COMBINED_CSS_PATH -Value "`r`n"
           }
 
-    - name: Combine HTML and JS into deployment folder
+    - name: Minify CSS
+      run: cleancss -o deployment/bundle.min.css deployment/bundle.css
+
+    - name: Combine JS into deployment folder
       shell: pwsh
       run: |
         $DEPLOY_PATH = "$PWD\deployment"
@@ -56,6 +64,9 @@ jobs:
             Get-Content $_.FullName | Add-Content -Path $COMBINED_JS_PATH
             Add-Content -Path $COMBINED_JS_PATH -Value "`r`n"
           }
+
+    - name: Minify JS
+      run: terser deployment/bundle.js -o deployment/bundle.min.js -c -m
 
     - name: Deploy deployment folder to gh-pages branch
       uses: peaceiris/actions-gh-pages@v4
