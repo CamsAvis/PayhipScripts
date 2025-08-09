@@ -10,11 +10,9 @@ let carouselTimeoutsDict = {
 const addCarousels = () => {
 	$(".product-description > *").each(function () {
 		if ($(this).text().trim() !== "%%CAROUSEL_START%%") {
-			console.log("not a carousel");
 			return;
 		}
 
-		console.log("found carousel");
 		initCarousel($(this));
 	});
 }
@@ -49,7 +47,7 @@ function initCarousel($start) {
 				.attr("data-carousel-selected", isFirst ? "true" : "false")
 				.appendTo($start);
 
-			addImageZoomer($img, imageTimeoutKey);
+			addImageMagnifierOnHover($img, imageTimeoutKey);
 
 			const $navItem = $("<div>")
 				.addClass("nav-item")
@@ -80,8 +78,7 @@ function initCarousel($start) {
 
 	// Prev button
 	$("<div>")
-		.addClass("carousel-navigator-arrow")
-		.addClass("carousel-navigator-arrow-prev")
+		.addClass("carousel-navigator-arrow carousel-navigator-arrow-prev")
 		.html('<span class="material-symbols-outlined">arrow_back_ios</span>')
 		.on("click", () => {
 			const { currentIdx, items } = carouselTimeoutsDict[imageTimeoutKey]
@@ -96,8 +93,7 @@ function initCarousel($start) {
 
 	// Next button
 	$("<div>")
-		.addClass("carousel-navigator-arrow")
-		.addClass("carousel-navigator-arrow-next")
+		.addClass("carousel-navigator-arrow carousel-navigator-arrow-next")
 		.html('<span class="material-symbols-outlined">arrow_forward_ios</span>')
 		.on("click", () => {
 			const { currentIdx, items } = carouselTimeoutsDict[imageTimeoutKey]
@@ -157,7 +153,7 @@ const resumeTimeout = (imageTimeoutKey) => {
 	updateCarousel(imageTimeoutKey, timeoutObject.currentIdx);
 }
 
-function addImageZoomer($zoomerTarget, imageTimeoutKey) {
+function addImageMagnifierOnHover($zoomerTarget, imageTimeoutKey) {
 	$zoomerTarget.attr("data-carousel-zoomer-hovered", "false");
 
 	$zoomerTarget.on("mouseenter", function () {
