@@ -61,7 +61,7 @@ class CarouselWrapper {
 				const key = $el.attr("id");
 
 				const currentTimeout = this.carouselTimeoutsMap[key]?.timeout;
-				const inView = this.isInViewport($el);
+				const inView = this.isElementCentered($el);
 				if(inView && !currentTimeout) {
 					this.resumeTimeout(key);
 				} else if(!inView) {
@@ -81,7 +81,20 @@ class CarouselWrapper {
     var viewportBottom = viewportTop + $(window).height();
 
     return elementBottom > viewportTop && elementTop < viewportBottom;
-};
+	};
+
+	isElementCentered($element) {
+			const rect = $element[0].getBoundingClientRect();
+			const viewportCenterX = window.innerWidth / 2;
+			const viewportCenterY = window.innerHeight / 3;
+
+			return (
+					viewportCenterX >= rect.left &&
+					viewportCenterX <= rect.right &&
+					viewportCenterY >= rect.top &&
+					viewportCenterY <= rect.bottom
+			);
+	}
 
 	initCarousel($root, autoAdvance, autoAdvanceTimeoutSeconds) {
 		let imageTimeoutKey = crypto.randomUUID();
