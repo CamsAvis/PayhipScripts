@@ -131,16 +131,33 @@ class CarouselTimeout {
 class CarouselWrapper {
 	constructor() { 
 		this.carouselTimeoutsMap = { };
+		this.autoAdvance = true;
+		this.autoAdvanceTimeoutSeconds = 10;
 	}
 
 	initCarousels() {
 		$(".product-description > *").each((_, element) => {
 			const $element = $(element);
-			if ($element.text().trim() !== "%%CAROUSEL_START%%") {
+			if (!$element.text().trim().match(/%%CAROUSEL_START.*%%/)) {
 				return;
 			}
 
-			this.initCarousel($element);
+			let match;
+			const regex = /(?<key>[a-z0-9-]+)=(?<value>[a-z0-9-]+)/gi
+			while ((match = regex.exec($element.text())) !== null) {
+				const { key, value } = match.groups;
+
+				switch(key) {
+					case 'auto-advance':
+						this.autoAdvance = value === "true";
+						break;
+					case 'auto-advance-speed-s':
+						this.autoAdvanceTimeoutSeconds = parseInt(value);
+						break;
+				}
+			}
+
+			this.initCarousel($element, params);
 		});
 	}
 
@@ -159,7 +176,7 @@ class CarouselWrapper {
     return elementBottom > viewportTop && elementTop < viewportBottom;
 };
 
-	initCarousel($root) {
+	initCarousel($root, params) {
 		let imageTimeoutKey = crypto.randomUUID();
 		
 		// pause auto rotations when off screen
@@ -267,14 +284,16 @@ class CarouselWrapper {
 		});
 		this.carouselTimeoutsMap[imageTimeoutKey].currentIdx = newIdx;
 
-		this.carouselTimeoutsMap[imageTimeoutKey].timeout = setTimeout(() => {
-			if (items.length === 0) { return; }
+		if(this.autoAdvance) {
+			this.carouselTimeoutsMap[imageTimeoutKey].timeout = setTimeout(() => {
+				if (items.length === 0) { return; }
 
-			let nextImgIdx = (newIdx + 1) % items.length;
-			this.carouselTimeoutsMap[imageTimeoutKey].currentIdx = nextImgIdx;
+				let nextImgIdx = (newIdx + 1) % items.length;
+				this.carouselTimeoutsMap[imageTimeoutKey].currentIdx = nextImgIdx;
 
-			this.updateCarousel(imageTimeoutKey, nextImgIdx)
-		}, 10 * 1000);
+				this.updateCarousel(imageTimeoutKey, nextImgIdx)
+			}, this.autoAdvanceTimeoutSeconds * 1000);
+		}
 	}
 
 	pauseTimeout(imageTimeoutKey) {
