@@ -270,7 +270,7 @@ h4 strong, h4 em {
 
 	display: grid;
 	grid-template-columns: auto 1fr auto;
-	grid-template-rows: 1fr;
+	grid-template-rows: 1fr 2rem;
 	place-items: center;
 	gap: 0.5rem;
 }
@@ -319,7 +319,7 @@ h4 strong, h4 em {
 	user-select: none;
   cursor: pointer;
   height: 25%;
-	padding-inline: 1rem;
+	padding-inline: 0.35rem;
   background-color: rgba(12,12,12,0.2);
   display: grid;
   place-items: center;
@@ -359,10 +359,7 @@ h4 strong, h4 em {
 }
 
 .carousel-nav-group {
-	position: absolute;
-	bottom: 1rem;
-	left: 50%;
-	transform: translateX(-50%);
+	grid-template-columns: 1 / 4;
 	z-index: 2;
 
 	display: flex;
@@ -370,7 +367,6 @@ h4 strong, h4 em {
 	gap: 1rem;
 
 	transition: opacity 200ms;
-	opacity: 0;
 	pointer-events: none;
 }
 
