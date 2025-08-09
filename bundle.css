@@ -439,11 +439,11 @@ h4 strong, h4 em {
 }
 
 .product-description-navigation a {
-	color: rgba(255,255,255,0.85);
+	color: rgba(255,255,255,0.85) !important;
 }
 
 .product-description-navigation a:hover {
-	color: white;
+	color: white !important;
 }
 
 
