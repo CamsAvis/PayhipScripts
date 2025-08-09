@@ -35,13 +35,13 @@ jobs:
         New-Item -ItemType Directory -Path deployment
       shell: pwsh
 
-    - name: Combine CSS into deployment folder
+    - name: Combine CSS from 'bundle' into deployment folder
       shell: pwsh
       run: |
         $DEPLOY_PATH = "$PWD\deployment"
         $COMBINED_CSS_PATH = Join-Path $DEPLOY_PATH "bundle.css"
         New-Item -ItemType File -Path $COMBINED_CSS_PATH -Force | Out-Null
-        Get-ChildItem -Path "$PWD\src" -Filter *.css -File -Recurse |
+        Get-ChildItem -Path "$PWD\src\css\bundle" -Filter *.css -File -Recurse |
           Sort-Object Name |
           ForEach-Object {
             Get-Content $_.FullName | Add-Content -Path $COMBINED_CSS_PATH
@@ -58,7 +58,7 @@ jobs:
         $COMBINED_JS_PATH = Join-Path $DEPLOY_PATH "bundle.js"
         New-Item -ItemType File -Path $COMBINED_JS_PATH -Force | Out-Null
 
-        Get-ChildItem -Path "$PWD\src\js" -Filter *.js -File -Recurse |
+        Get-ChildItem -Path "$PWD\src\js\bundle" -Filter *.js -File -Recurse |
           Sort-Object Name |
           ForEach-Object {
             Get-Content $_.FullName | Add-Content -Path $COMBINED_JS_PATH
@@ -67,6 +67,24 @@ jobs:
 
     - name: Minify JS
       run: terser deployment/bundle.js -o deployment/bundle.min.js -c -m
+
+    - name: Publish individualped js files
+      shell: pwsh
+      run: |
+        $deployIndividual = Join-Path $PWD "deployment/individual"
+        if (-not (Test-Path $deployIndividual)) {  New-Item -ItemType Directory -Path $deployIndividual | Out-Null }
+        Get-ChildItem -Path "$PWD/src/js/individual" -Filter *.js -File | ForEach-Object {
+          Copy-Item $_.FullName -Destination $deployIndividual
+        }
+
+    - name: Publish individualped css files
+      shell: pwsh
+      run: |
+        $deployIndividual = Join-Path $PWD "deployment/individual"
+        if (-not (Test-Path $deployIndividual)) {  New-Item -ItemType Directory -Path $deployIndividual | Out-Null }
+        Get-ChildItem -Path "$PWD/src/css/individual" -Filter *.css -File | ForEach-Object {
+          Copy-Item $_.FullName -Destination $deployIndividual
+        }
 
     - name: Deploy deployment folder to gh-pages branch
       uses: peaceiris/actions-gh-pages@v4

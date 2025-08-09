@@ -37,8 +37,6 @@ window.addEventListener('DOMContentLoaded', () => {
       window.open('https://discord.com/invite/RCtpFfV8HY', '_blank');
     });
 
-    
-
     // const cardsWithLinks = document.querySelectorAll(".card:has(a) .card__content");
     document.querySelectorAll(".card__content:has(a)").forEach(card => {
       const link = card.querySelector("a");
