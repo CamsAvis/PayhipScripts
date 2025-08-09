@@ -225,13 +225,10 @@ class CarouselWrapper {
 			.attr("data-show-nav", showNav.toString())
 			.attr("data-show-arrows", showArrows.toString());
 
-		const $imageContainer = $("<div>")
-			.addClass("carousel-image-container")
-			.appendTo($root);
-
+		const $imageContainer = $("<div>").addClass("carousel-image-container");
 		const $navGroup = $("<div>")
 			.addClass("carousel-nav-group")
-			.appendTo($root);
+			.insertAfter($root);
 
 		// Gather all children between start and end markers
 		let $current = $($root).next();
@@ -276,7 +273,7 @@ class CarouselWrapper {
 		this.carouselTimeoutsMap[imageTimeoutKey] = carouselTimeoutObject;
 
 		// Prev button
-		$("<div>")
+		const $prevArrow = $("<div>")
 			.addClass("carousel-navigator-arrow carousel-navigator-arrow-prev")
 			.html('<span class="material-symbols-outlined">arrow_back_ios</span>')
 			.on("click", () => {
@@ -288,10 +285,9 @@ class CarouselWrapper {
 
 				this.updateCarousel(imageTimeoutKey, newImgIdx);
 			})
-			.before($imageContainer);
 
 		// Next button
-		$("<div>")
+		const $nextArrow = $("<div>")
 			.addClass("carousel-navigator-arrow carousel-navigator-arrow-next")
 			.html('<span class="material-symbols-outlined">arrow_forward_ios</span>')
 			.on("click", () => {
@@ -301,7 +297,8 @@ class CarouselWrapper {
 				let newImgIdx = (currentIdx + 1) % items.length;
 				this.updateCarousel(imageTimeoutKey, newImgIdx);
 			})
-			.after($imageContainer);
+
+		$root.append($prevArrow, $imageContainer, $nextArrow);
 
 		// start
 		this.updateCarousel(imageTimeoutKey, 0);
