@@ -21,16 +21,14 @@ const initProductPageNav = () => {
 		$heading.attr("id", text)
 			.addClass("heading-link")
 			.on("click", function () {
-				const id = $(this).attr("id");
-
-				const url = `${window.location.origin}${window.location.pathname}#${id}`;
+				const url = `${window.location.origin}${window.location.pathname}#${text}`;
 				navigator.clipboard.writeText(url);
-				window.location.hash = id;
+				window.location.hash = text;
 			});
 
 		const $headerListItem = $("<li>").appendTo($productDescriptionNavigation);
 
-		$(`<a href="#${heading.id}">`)
+		$(`<a href="#${text}">`)
 			.text(text)
 			.addClass("header-nav-item")
 			.appendTo($headerListItem);
