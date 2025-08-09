@@ -1,5 +1,5 @@
 .custom-carousel[data-show-arrows="true"] .carousel-navigator-arrow {
-	display: block;
+	display: grid;
 }
 
 .custom-carousel[data-show-arrows="false"] .carousel-navigator-arrow {
@@ -7,7 +7,7 @@
 }
 
 .custom-carousel[data-show-nav="true"] .carousel-nav-group {
-	display: block;
+	display: grid;
 }
 
 .custom-carousel[data-show-nav="false"] .carousel-nav-group {
@@ -17,14 +17,15 @@
 .custom-carousel {
   position: relative;
   width: 100%;
-	height: auto;
-	
+	height: fit-content;
+
 	display: grid;
 	grid-template-columns: auto 1fr auto;
 	grid-template-rows: 1fr;
 }
 
 .carousel-image-container {
+	position: relative;
 	overflow: hidden;
 	width: 100%;
 	aspect-ratio: 16 / 9;
@@ -61,11 +62,9 @@
 
 .carousel-navigator-arrow {
 	user-select: none;
-  position: absolute;
-  transform: translateY(-50%);
   cursor: pointer;
   height: 25%;
-	padding-inline: 0.5rem;
+	padding-inline: 1rem;
   background-color: rgba(12,12,12,0.2);
   display: grid;
   place-items: center;
@@ -76,14 +75,6 @@
 	&:hover {
 		background-color: rgba(12,12,12,0.5);
 	}
-}
-
-.carousel-navigator-arrow-prev {
-  left: 0;
-}
-
-.carousel-navigator-arrow-next {
-  right: 0;
 }
 
 .material-symbols-outlined {
