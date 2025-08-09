@@ -42,7 +42,7 @@ class CarouselWrapper {
 		let navItemIdx = 0;
 
 		let carouselTimeoutObject = CarouselTimeout.init();
-		while ($current.length && !isCarouselEnd($current)) {
+		while ($current.length && !this.isCarouselEnd($current)) {
 			$current.find("img").each((_, img) => {
 				const $img = $(img);
 				const currentIndex = navItemIdx;
