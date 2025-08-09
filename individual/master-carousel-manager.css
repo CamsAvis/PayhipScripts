@@ -24,6 +24,7 @@
 }
 
 .carousel-navigator-arrow {
+	user-select: none;
   position: absolute;
   transform: translateY(-50%);
   cursor: pointer;
