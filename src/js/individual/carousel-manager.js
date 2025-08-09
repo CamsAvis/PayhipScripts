@@ -258,11 +258,10 @@ class CarouselWrapper {
 		$element.attr("data-carousel-zoomer-hovered", "false");
 
 		$element.on("mouseenter", () => {
+			$element.attr("data-carousel-zoomer-hovered", "true");
 			if($element.attr("data-pause-on-hover") === "false") {
 				return;
 			}
-			
-			$element.attr("data-carousel-zoomer-hovered", "true");
 			this.pauseTimeout(imageTimeoutKey);
 		})
 		
