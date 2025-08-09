@@ -136,7 +136,8 @@ class CarouselWrapper {
 				return;
 			}
 
-			let autoAdvance = showNav = showArrows = true;
+			let autoAdvance, showNav, showArrows;
+			autoAdvance = showNav = showArrows = true;
 			let autoAdvanceTimeoutSeconds = 10;
 
 			let match;
