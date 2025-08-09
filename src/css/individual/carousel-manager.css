@@ -110,7 +110,7 @@
 }
 
 .carousel-nav-group {
-	grid-template-columns: 1 / 4;
+	grid-column: 1 / 4;
 	z-index: 2;
 
 	display: flex;
