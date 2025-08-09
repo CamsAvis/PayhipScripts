@@ -31,8 +31,9 @@ jobs:
 
     - name: Prepare deployment folder
       run: |
-        if (Test-Path deployment) { Remove-Item -Recurse -Force deployment }
-        New-Item -ItemType Directory -Path deployment
+        New-Item -ItemType Directory -Path deploy -Force | Out-Null
+        $branchName = $env:GITHUB_REF -replace '^refs/heads/', '' -replace '/', '-'
+        Get-ChildItem -Path deploy -File | Where-Object { $_.Name -like "$branchName-*" } | Remove-Item -Force
       shell: pwsh
 
     - name: Combine CSS from 'bundle' into deployment folder
