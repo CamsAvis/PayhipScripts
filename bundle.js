@@ -1,7 +1,3 @@
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script>
-
 window.addEventListener('DOMContentLoaded', () => {
     // recommended creators
     const selector = `
@@ -462,4 +458,3 @@ function addZoomer($zoomerTarget) {
 }
 
 
-</script>
