@@ -133,7 +133,7 @@ class CarouselWrapper {
 	initCarousels() {
 		$(".product-description > *").each((_, element) => {
 			const $element = $(element);
-			if (!$element.text().trim().includes(/\%\%CAROUSEL_START.*\%\%/)) {
+			if (!$element.text().trim().match(/\%\%CAROUSEL_START.*\%\%/)) {
 				return;
 			}
 
