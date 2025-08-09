@@ -273,7 +273,11 @@ class CarouselWrapper {
 		// Prev button
 		const $prevArrow = $("<div>")
 			.addClass("carousel-navigator-arrow carousel-navigator-arrow-prev")
-			.html('<span class="material-symbols-outlined">arrow_back_ios</span>')
+			.html(`
+				<span class="material-symbols-outlined" style="transform: 'rotate(90deg);'">
+					arrow_forward_ios
+				</span>
+			`)
 			.on("click", () => {
 				const { currentIdx, items } = this.carouselTimeoutsMap[imageTimeoutKey]
 				if (items.length === 0) { return; }
