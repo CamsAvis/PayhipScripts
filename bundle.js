@@ -383,8 +383,9 @@ class CarouselWrapper {
 	}
 
 	addImageMagnifierOnHover($zoomerTarget) {
+		const $imageContainer = $zoomerTarget.closest(".carousel-image-container");
+
 		$zoomerTarget.on("mousemove", (e) => {
-			const $imageContainer = $zoomerTarget.closest(".carousel-image-container");
 			const isHovered = $imageContainer.attr("data-carousel-zoomer-hovered") === "true";
 			const shouldZoom = $imageContainer.attr("data-enable-zoom") === "true";
 
@@ -400,6 +401,17 @@ class CarouselWrapper {
 				transformOrigin: `${x}% ${y}%`,
 				transform: "scale(2)"
 			})
+		});
+
+		$zoomerTarget.on("mouseleave", () => {
+			$imageContainer.attr("data-carousel-zoomer-hovered", "false");
+
+			$zoomerTarget.css({
+				transformOrigin: "center center",
+				transform: "scale(1)"
+			});
+
+			this.resumeTimeout(imageTimeoutKey);
 		});
 	}
 }
