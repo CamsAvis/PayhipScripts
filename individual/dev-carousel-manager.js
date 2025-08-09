@@ -38,7 +38,7 @@ class CarouselWrapper {
 		const $navGroup = $("<div>").addClass("carousel-nav-group");
 
 		// Gather all children between start and end markers
-		let $current = $root.next();
+		let $current = $($root).next();
 		let navItemIdx = 0;
 
 		let carouselTimeoutObject = CarouselTimeout.init();
