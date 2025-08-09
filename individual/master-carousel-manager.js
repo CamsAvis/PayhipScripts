@@ -24,8 +24,10 @@ class CarouselWrapper {
 				return;
 			}
 
-			let autoAdvance, showNav, showArrows, enableZoom;
-			autoAdvance = showNav = showArrows = enableZoom = true;
+			let autoAdvance = true;
+			let showNav = true;
+			let showArrows = true;
+			let enableZoom = true;
 			let autoAdvanceTimeoutSeconds = 10;
 
 			let match;
