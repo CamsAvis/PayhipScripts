@@ -197,14 +197,11 @@ class CarouselWrapper {
 
 	isElementCentered($element) {
 			const rect = $element[0].getBoundingClientRect();
-			const viewportCenterX = window.innerWidth / 2;
-			const viewportCenterY = window.innerHeight / 2 - (window.innerHeight / 3);
+			const viewportCenterY = window.innerHeight / 2;
 
 			return (
-					viewportCenterX >= rect.left &&
-					viewportCenterX <= rect.right &&
-					viewportCenterY >= rect.top &&
-					viewportCenterY <= rect.bottom
+					viewportCenterY >= (rect.top - window.innerHeight / 3) &&
+					viewportCenterY <= (rect.bottom + window.innerHeight / 3)
 			);
 	}
 
