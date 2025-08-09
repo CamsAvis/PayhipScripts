@@ -40,7 +40,7 @@ class CarouselWrapper {
 				}
 			}
 
-			this.initCarousel($element, params);
+			this.initCarousel($element);
 		});
 	}
 
@@ -59,7 +59,7 @@ class CarouselWrapper {
     return elementBottom > viewportTop && elementTop < viewportBottom;
 };
 
-	initCarousel($root, params) {
+	initCarousel($root) {
 		let imageTimeoutKey = crypto.randomUUID();
 		
 		// pause auto rotations when off screen
