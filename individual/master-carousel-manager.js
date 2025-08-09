@@ -28,6 +28,7 @@ class CarouselWrapper {
 	}
 
 	isCarouselEnd($item) {
+		// ok
 		return $item.text().trim() === "%%CAROUSEL_END%%";
 	}
 
