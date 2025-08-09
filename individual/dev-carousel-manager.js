@@ -1,7 +1,7 @@
 class CarouselTimeout {
 	constructor(items, navItems, currentIdx, timeout) {
 		this.items = items;
-		this.navitems = navItems;
+		this.navItems = navItems;
 		this.currentIdx = currentIdx;
 		this.timeout = timeout;
 	}
