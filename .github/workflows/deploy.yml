@@ -51,7 +51,7 @@ jobs:
         $COMBINED_HTML_PATH = Join-Path $DEPLOY_PATH "combined_html.html"
         New-Item -ItemType File -Path $COMBINED_HTML_PATH -Force | Out-Null
 
-        Get-Content "$PWD\html\includes.html" | Set-Content -Path $COMBINED_HTML_PATH
+        Get-Content "$PWD\src\html\includes.html" | Set-Content -Path $COMBINED_HTML_PATH
 
         Add-Content -Path $COMBINED_HTML_PATH -Value "<script>`r`n"
         Get-ChildItem -Path "$PWD\src\js" -Filter *.js -File -Recurse |
