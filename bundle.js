@@ -688,8 +688,8 @@ const initProductPageNav = () => {
 		$heading.attr("id", text)
 			.addClass("heading-link")
 			.on("click", function () {
-				const url = `${window.location.origin}${window.location.pathname}#${text}`;
-				navigator.clipboard.writeText(url);
+				// const url = `${window.location.origin}${window.location.pathname}#${text}`;
+				// navigator.clipboard.writeText(url);
 				window.location.hash = text;
 			});
 
