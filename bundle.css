@@ -412,6 +412,7 @@ h4 strong, h4 em {
 	padding: 0.5rem 0 0.5rem 0;
 	display: flex;
 	align-items: center;
+	position: relative;
 }
 
 .foldout-header h1,
@@ -429,6 +430,19 @@ h4 strong, h4 em {
 	cursor: pointer;
 	user-select: none;
 }
+
+.foldout-header::before {
+	font-family: "Material Symbols Outlined"; /* or "Material Icons" */
+	content: ">";
+	content: '\e5e1';
+	margin-right: 8px;
+	transition: transform 200ms;
+}
+
+.foldout-header:has(+ .foldout-container[data-folded-out='true'])::before {
+	transform: rotate(90deg);
+}
+
 
 .foldout-container[data-folded-out='true'] {
 	max-height: 100vh;
@@ -460,8 +474,7 @@ h4 strong, h4 em {
 }
 
 .heading-link::before {
-	position: absolute;
-	left: -1rem;
+	margin-right: 0.85rem;
 	font-weight: 100;
 	content: '#';
 	font-size: 1em;
@@ -471,7 +484,7 @@ h4 strong, h4 em {
 
 .product-description-navigation a {
 	color: var(--color-primary-light-400) !important;
-	
+
 }
 
 .product-description-navigation a:hover {
