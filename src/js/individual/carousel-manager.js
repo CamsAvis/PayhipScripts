@@ -31,6 +31,7 @@ class CarouselWrapper {
 			let pauseOnHover = true;
 			let autoAdvanceTimeoutSeconds = 10;
 
+			
 			let match;
 			const regex = /(?<key>[a-z0-9-]+)=(?<value>[a-z0-9-]+)/gi
 			while ((match = regex.exec($element.text())) !== null) {
