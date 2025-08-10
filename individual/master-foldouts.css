@@ -1,0 +1,35 @@
+.foldout-container {
+	overflow: auto;
+	transition: max-height 300ms;
+}
+
+.foldout-header {
+	padding: 0.5rem 0 0.5rem 0;
+	display: flex;
+	align-items: center;
+}
+
+.foldout-header h1,
+.foldout-header h2,
+.foldout-header h3,
+.foldout-header h4,
+.foldout-header p,
+.foldout-header span {
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+.foldout-header:hover {
+	background-color: rgba(12,12,12,0.35);
+	cursor: pointer;
+	user-select: none;
+}
+
+.foldout-container[data-folded-out='true'] {
+	max-height: 100vh;
+}
+
+.foldout-container[data-folded-out='false'] {
+	max-height: 0;
+	overflow: hidden;
+}

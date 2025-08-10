@@ -1,3 +1,7 @@
+.banner__content .banner__box h1.heading-text {
+	color: white !important;
+}
+
 .product-description iframe {
 	border: none !important;
 }
@@ -144,9 +148,9 @@
   right: 0 !important;
   top: 25% !important;
 
-  border-bottom: 1px solid #cccccc !important;
+  border-bottom: 1px solid var(--color-primary-light-200) !important;
 
-  color: #cccccc !important;
+  color: var(--color-primary-light-200) !important;
 
   & .live-search-input {
     color: white;
@@ -158,7 +162,7 @@
   .icon-image-wrapper-outer
   .icon-image-wrapper-inner {
   background-color: transparent;
-  border: 3px solid rgba(200, 200, 200, 1);
+  border: 3px solid rgb(200, 200, 200);
   overflow: hidden;
 }
 
@@ -216,6 +220,9 @@
 
 :root {
   --star-bezier: cubic-bezier(0.19, 1, 0.22, 1);
+	--color-primary-light-100: #f4f4f4ff;
+	--color-primary-light-200: #cccccc;
+	--color-primary-light-400: rgba(255, 255, 255, 0.85);
   --color-accent: #9aff9e;
 }
 
@@ -223,7 +230,6 @@ html {
 	scroll-behavior: smooth;
 	scroll-padding-top: 10vh;
 }
-
 
 header {
   background-color: rgba(12, 12, 12, 0.2) !important;
@@ -358,18 +364,6 @@ h4 strong, h4 em {
   'opsz' 24
 }
 
-.magnifier {
-  position: absolute;
-  pointer-events: none; /* so it doesn't block the mouse */
-  border: 2px solid #333;
-  /* border-radius: 100%; */
-  width: 150px;
-  height: 150px;
-  background-repeat: no-repeat;
-  background-size: 200%; /* controls zoom level */
-  display: none;
-}
-
 .zoom-target {
   display: inline-block;
   transition: transform 0.2s ease;
@@ -409,6 +403,43 @@ h4 strong, h4 em {
 }
 
 
+.foldout-container {
+	overflow: auto;
+	transition: max-height 300ms;
+}
+
+.foldout-header {
+	padding: 0.5rem 0 0.5rem 0;
+	display: flex;
+	align-items: center;
+}
+
+.foldout-header h1,
+.foldout-header h2,
+.foldout-header h3,
+.foldout-header h4,
+.foldout-header p,
+.foldout-header span {
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+.foldout-header:hover {
+	background-color: rgba(12,12,12,0.35);
+	cursor: pointer;
+	user-select: none;
+}
+
+.foldout-container[data-folded-out='true'] {
+	max-height: 100vh;
+}
+
+.foldout-container[data-folded-out='false'] {
+	max-height: 0;
+	overflow: hidden;
+}
+
+
 
 .product-details-wrapper blockquote {
 	border: none !important;
@@ -439,7 +470,8 @@ h4 strong, h4 em {
 }
 
 .product-description-navigation a {
-	color: rgba(255,255,255,0.85) !important;
+	color: var(--color-primary-light-400) !important;
+	
 }
 
 .product-description-navigation a:hover {

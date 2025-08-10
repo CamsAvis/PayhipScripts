@@ -113,18 +113,6 @@
   'opsz' 24
 }
 
-.magnifier {
-  position: absolute;
-  pointer-events: none; /* so it doesn't block the mouse */
-  border: 2px solid #333;
-  /* border-radius: 100%; */
-  width: 150px;
-  height: 150px;
-  background-repeat: no-repeat;
-  background-size: 200%; /* controls zoom level */
-  display: none;
-}
-
 .zoom-target {
   display: inline-block;
   transition: transform 0.2s ease;
