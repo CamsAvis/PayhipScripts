@@ -473,6 +473,7 @@ h4 strong, h4 em {
 }
 
 .heading-link::before {
+	position: absolute;
 	left: -0.85rem;
 	font-weight: 100;
 	content: '#';
