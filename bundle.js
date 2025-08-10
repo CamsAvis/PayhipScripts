@@ -173,12 +173,24 @@ class CarouselWrapper {
 
 				try {
 					switch(key) {
-						case DATA_SHOW_NAV: showNav = value === "true"; break;
-						case DATA_SHOW_ARROWS: showArrows = value === "true"; break;
-						case DATA_ENABLE_ZOOM: enableZoom = value === "true"; break;
-						case DATA_AUTO_ADVANCE: autoAdvance = value === "true"; break;
-						case DATA_AUTO_ADVANCE: pauseOnHover = value === "true"; break;
-						case DATA_AUTO_ADVANCE_SPEED_SECONDS: autoAdvanceTimeoutSeconds = parseInt(value); break;
+						case Attributes.DATA_SHOW_NAV: 
+							showNav = value === "true"; 
+							break;
+						case Attributes.DATA_SHOW_ARROWS: 
+							showArrows = value === "true"; 
+							break;
+						case Attributes.DATA_ENABLE_ZOOM: 
+							enableZoom = value === "true"; 
+							break;
+						case Attributes.DATA_AUTO_ADVANCE: 
+							autoAdvance = value === "true"; 
+							break;
+						case Attributes.DATA_AUTO_ADVANCE: 
+							pauseOnHover = value === "true"; 
+							break;
+						case Attributes.DATA_AUTO_ADVANCE_SPEED_SECONDS: 
+							autoAdvanceTimeoutSeconds = parseInt(value); 
+							break;
 					}
 				} catch(e) {
 					console.log(e);
@@ -195,13 +207,6 @@ class CarouselWrapper {
 				pauseOnHover
 			);
 		});
-
-		this.initWindowScrollWatcher();
-	}
-
-	initWindowScrollWatcher() {
-		// pause auto rotations when off screen
-		
 	}
 
 	isCarouselEnd = ($item) => $item.text().trim() === "%%CAROUSEL_END%%";
@@ -338,6 +343,7 @@ class CarouselWrapper {
 		// start
 		this.updateCarousel(imageTimeoutKey, 0);
 
+		// pause / resume when on / off screen
 		$(window).on("resize scroll", () => {
 			const $el = this.carouselTimeoutsMap[imageTimeoutKey].$element;
 			const currentTimeout = this.carouselTimeoutsMap[imageTimeoutKey].timeout;
@@ -361,7 +367,7 @@ class CarouselWrapper {
 		items.forEach(($el, idx) => {
 			const selectedStr = (idx === newIdx).toString();
 			$el.data(Attributes.DATA_CAROUSEL_SELECTED, selectedStr);
-			$(navItems[idx]).data(DATA_NAV_SELECTED, selectedStr);
+			$(navItems[idx]).data(Attributes.DATA_NAV_SELECTED, selectedStr);
 		});
 		this.carouselTimeoutsMap[imageTimeoutKey].currentIdx = newIdx;
 
