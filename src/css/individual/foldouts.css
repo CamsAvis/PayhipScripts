@@ -7,6 +7,7 @@
 	padding: 0.5rem 0 0.5rem 0;
 	display: flex;
 	align-items: center;
+	position: relative;
 }
 
 .foldout-header h1,
@@ -24,6 +25,19 @@
 	cursor: pointer;
 	user-select: none;
 }
+
+.foldout-header::before {
+	font-family: "Material Symbols Outlined"; /* or "Material Icons" */
+	content: ">";
+	content: '\e5e1';
+	margin-right: 8px;
+	transition: transform 200ms;
+}
+
+.foldout-header:has(+ .foldout-container[data-folded-out='true'])::before {
+	transform: rotate(90deg);
+}
+
 
 .foldout-container[data-folded-out='true'] {
 	max-height: 100vh;
