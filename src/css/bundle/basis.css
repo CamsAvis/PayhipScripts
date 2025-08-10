@@ -1,5 +1,8 @@
 :root {
   --star-bezier: cubic-bezier(0.19, 1, 0.22, 1);
+	--color-primary-light-100: #f4f4f4ff;
+	--color-primary-light-200: #cccccc;
+	--color-primary-light-400: rgba(255, 255, 255, 0.85);
   --color-accent: #9aff9e;
 }
 
@@ -7,7 +10,6 @@ html {
 	scroll-behavior: smooth;
 	scroll-padding-top: 10vh;
 }
-
 
 header {
   background-color: rgba(12, 12, 12, 0.2) !important;
