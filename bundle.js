@@ -670,13 +670,20 @@ const initProductPageNav = () => {
 
 	const $productDescriptionNavigation = $("<ol>").addClass("product-description-navigation");
 	const $productDescriptionHeadingText = $("<h1>").text("SHORTCUTS");
-	$productDescription.prepend($productDescriptionHeadingText);
 
-	$productDescription.find("h2").each(function() {
-		const $heading = $(this);
+	let didAddShortcuts = false;
+	$productDescription.children().each(function() {
+		const $element = $(this);
 
-		const text = $heading.text()
+		if (!$element.text().includes("%%SHORTCUT_TARGET%%")) {
+			return;
+		}
+
+		didAddShortcuts = true;
+
+		const text = $element.text()
 			.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, "") // remove emojis
+			.replace("%%SHORTCUT_TARGET%%", "")
 			.trim()
 			.toLowerCase()
 			.replace(/\b\w/g, char => char.toUpperCase());
@@ -685,7 +692,7 @@ const initProductPageNav = () => {
 			return;
 		}
 
-		$heading.attr("id", text)
+		$element.attr("id", text)
 			.addClass("heading-link")
 			.on("click", function () {
 				// const url = `${window.location.origin}${window.location.pathname}#${text}`;
@@ -704,6 +711,10 @@ const initProductPageNav = () => {
 			$productDescriptionHeadingText.after($productDescriptionNavigation);
 		}
 	});
+
+	if(didAddShortcuts) {
+		$productDescription.prepend($productDescriptionHeadingText);
+	}
 }
 
 if (document.body.id === "page-product") {
