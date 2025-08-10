@@ -68,8 +68,7 @@ class CarouselWrapper {
 				const $el = $(el);
 				
 				const isHovered = $el.closest(".carousel-image-container")
-					.find(".zoom-target")
-					.toArray().some(el => $(el).attr("data-carousel-zoomer-hovered") === "true");
+					.attr("data-carousel-zoomer-hovered") === "true";
 
 				if(isHovered) {
 					return;
@@ -302,8 +301,6 @@ class CarouselWrapper {
 		});
 
 		$zoomerTarget.on("mouseleave", () => {
-			$imageContainer.attr("data-carousel-zoomer-hovered", "false");
-
 			$zoomerTarget.css({
 				transformOrigin: "center center",
 				transform: "scale(1)"
