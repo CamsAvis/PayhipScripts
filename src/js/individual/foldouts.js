@@ -14,10 +14,12 @@ const parseQuery = ($element) => {
 }
 
 const createFoldout = ($rootElement) => {
+		const query = parseQuery($rootElement);
+
 		// main container
 		const $foldoutContainer = $("<div>")
 			.addClass("foldout-container")
-			.attr("data-folded-out", "true");
+			.attr("data-folded-out", query['folded-out'] === "true");
 
 		// header
 		const $foldoutHeader = $("<div>")
