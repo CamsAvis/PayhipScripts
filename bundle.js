@@ -246,16 +246,16 @@ class CarouselWrapper {
 		$root.html("")
 			.addClass(Attributes.CLASS_CAROUSEL_ROOT)
 			.attr("id", imageTimeoutKey)
-			.data(Attributes.DATA_AUTO_ADVANCE, autoAdvance.toString())
-			.data(Attributes.DATA_AUTO_ADVANCE_SPEED_SECONDS, autoAdvanceTimeoutSeconds.toString())
-			.data(Attributes.DATA_SHOW_NAV, showNav.toString())
-			.data(Attributes.DATA_SHOW_ARROWS, showArrows.toString());
+			.attr(Attributes.DATA_AUTO_ADVANCE, autoAdvance.toString())
+			.attr(Attributes.DATA_AUTO_ADVANCE_SPEED_SECONDS, autoAdvanceTimeoutSeconds.toString())
+			.attr(Attributes.DATA_SHOW_NAV, showNav.toString())
+			.attr(Attributes.DATA_SHOW_ARROWS, showArrows.toString());
 
 		const $navGroup = $("<div>").addClass(Attributes.CLASS_NAV_GROUP);
 		const $imageContainer = $("<div>")
 			.addClass(Attributes.CLASS_IMAGE_CONTAINER)
-			.data(Attributes.DATA_ENABLE_ZOOM, enableZoom.toString())
-			.data(Attributes.DATA_PAUSE_ON_HOVER, pauseOnHover.toString());
+			.attr(Attributes.DATA_ENABLE_ZOOM, enableZoom.toString())
+			.attr(Attributes.DATA_PAUSE_ON_HOVER, pauseOnHover.toString());
 		this.addPauseAutoAdvance($imageContainer, imageTimeoutKey);
 
 		// Gather all children between start and end markers
@@ -271,7 +271,7 @@ class CarouselWrapper {
 				const isFirst = (navItemIdx === 0).toString();
 
 				$img.addClass(Attributes.CLASS_ZOOM_TARGET)
-					.data(Attributes.DATA_CAROUSEL_SELECTED, isFirst)
+					.attr(Attributes.DATA_CAROUSEL_SELECTED, isFirst)
 					.appendTo($imageContainer);
 
 				this.addImageMagnifierOnHover($img, imageTimeoutKey);
@@ -366,20 +366,20 @@ class CarouselWrapper {
 
 		items.forEach(($el, idx) => {
 			const selectedStr = (idx === newIdx).toString();
-			$el.data(Attributes.DATA_CAROUSEL_SELECTED, selectedStr);
-			$(navItems[idx]).data(Attributes.DATA_NAV_SELECTED, selectedStr);
+			$el.attr(Attributes.DATA_CAROUSEL_SELECTED, selectedStr);
+			$(navItems[idx]).attr(Attributes.DATA_NAV_SELECTED, selectedStr);
 		});
 		this.carouselTimeoutsMap[imageTimeoutKey].currentIdx = newIdx;
 
 		const timeoutObject = this.carouselTimeoutsMap[imageTimeoutKey];
 		const isHovered = timeoutObject.$root
-			.data(Attributes.DATA_CAROUSEL_MAGNIFIER_HOVERED) === "true";
+			.attr(Attributes.DATA_CAROUSEL_MAGNIFIER_HOVERED) === "true";
 
 		const autoAdvance = timeoutObject.$root
-			.data(Attributes.DATA_AUTO_ADVANCE) === "true";
+			.attr(Attributes.DATA_AUTO_ADVANCE) === "true";
 
 		const autoAdvanceTimoutSeconds = timeoutObject.$root
-			.data(Attributes.DATA_AUTO_ADVANCE_SPEED_SECONDS) || "10";
+			.attr(Attributes.DATA_AUTO_ADVANCE_SPEED_SECONDS) || "10";
 
 		if(!isHovered && autoAdvance) {
 			this.carouselTimeoutsMap[imageTimeoutKey].timeout = setTimeout(() => {
@@ -412,25 +412,25 @@ class CarouselWrapper {
 	}
 
 	addPauseAutoAdvance($element, imageTimeoutKey) {
-		$element.data(
+		$element.attr(
 			Attributes.DATA_CAROUSEL_MAGNIFIER_HOVERED, 
 			"false"
 		);
 
 		$element.on("mouseenter", () => {
-			$element.data(
+			$element.attr(
 				Attributes.DATA_CAROUSEL_MAGNIFIER_HOVERED, 
 				"true"
 			);
 
-			if($element.data(Attributes.DATA_PAUSE_ON_HOVER) === "false") {
+			if($element.attr(Attributes.DATA_PAUSE_ON_HOVER) === "false") {
 				return;
 			}
 			this.pauseTimeout(imageTimeoutKey);
 		})
 		
 		$element.on("mouseleave", () => {
-			$element.data(
+			$element.attr(
 				Attributes.DATA_CAROUSEL_MAGNIFIER_HOVERED, 
 				"false"
 			);
@@ -449,10 +449,10 @@ class CarouselWrapper {
 
 		$zoomerTarget.on("mousemove", (e) => {
 			const isHovered = $imageContainer
-				.data(Attributes.DATA_CAROUSEL_MAGNIFIER_HOVERED) === "true";
+				.attr(Attributes.DATA_CAROUSEL_MAGNIFIER_HOVERED) === "true";
 
 			const shouldZoom = $imageContainer
-				.data(Attributes.DATA_ENABLE_ZOOM) === "true";
+				.attr(Attributes.DATA_ENABLE_ZOOM) === "true";
 
 			if (!isHovered || !shouldZoom) { 
 				return; 
@@ -469,7 +469,7 @@ class CarouselWrapper {
 		});
 
 		$zoomerTarget.on("mouseleave", () => {
-			$imageContainer.data(
+			$imageContainer.attr(
 				Attributes.DATA_CAROUSEL_MAGNIFIER_HOVERED, 
 				"false"
 			);
