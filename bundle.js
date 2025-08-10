@@ -446,7 +446,7 @@ const parseQuery = ($element) => {
 
 const createFoldout = ($rootElement) => {
 		const query = parseQuery($rootElement);
-		const foldedOutByDefault = (!('folded-out' in query)) || (query['folded-out'] === "true");
+		const foldedOutByDefault = query['folded-out'] === "true";
 
 		// main container
 		const $foldoutContainer = $("<div>")
