@@ -179,13 +179,10 @@ class CarouselWrapper {
 			$(".custom-carousel").each((_, el) => {
 				const $el = $(el);
 				
-				const isHovered = $el.closest(".carousel-image-container")
-					.attr("data-carousel-zoomer-hovered") === "true";
-
-				if(isHovered) {
-					return;
-				}
-				
+				const $container = $el.find(".carousel-image-container").first();
+				const isHovered = !!$container.length && $container.is('[data-carousel-zoomer-hovered="true"]');
+				if (isHovered) return;
+								
 				const key = $el.attr("id");
 				const currentTimeout = this.carouselTimeoutsMap[key]?.timeout;
 				const inView = this.isElementCentered($el);
