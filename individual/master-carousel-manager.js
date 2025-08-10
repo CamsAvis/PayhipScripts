@@ -12,29 +12,6 @@ class CarouselTimeout {
 	}
 }
 
-class Attributes {
-	static get DATA_SHOW_NAV() { return "show-nav"; }
-	static get DATA_SHOW_ARROWS() { return "show-arrows"; }
-	static get DATA_ENABLE_ZOOM() { return "enable-zoom"; }
-	static get DATA_AUTO_ADVANCE() { return "auto-advance"; }
-	static get DATA_PAUSE_ON_HOVER() { return "pause-on-hover"; }
-	static get DATA_AUTO_ADVANCE_SPEED_SECONDS() { return "auto-advance-speed-s"; }
-
-	static get DATA_CAROUSEL_MAGNIFIER_HOVERED() { return "data-carousel-zoomer-hovered"; }
-	static get DATA_CAROUSEL_SELECTED() { return "data-carousel-selected" }
-	static get DATA_NAV_SELECTED() { return "data-nav-selected" }
-
-	static get CLASS_ZOOM_TARGET() { return "zoom_target" }
-	static get CLASS_CAROUSEL_ROOT() { return "custom-carousel" }
-	static get CLASS_IMAGE_CONTAINER() { return "carousel-image-container" }
-	static get CLASS_NAV_ITEM() { return "nav-item" }
-	static get CLASS_NAV_GROUP() { return "carousel-nav-group" }
-
-	static get CLASS_CAROUSEL_NAVIGATOR_ARROW() { return "carousel-navigator-arrow"; }
-	static get CLASS_CAROUSEL_NAVIGATOR_ARROW_PREV() { return "carousel-navigator-arrow-prev"; }
-	static get CLASS_CAROUSEL_NAVIGATOR_ARROW_NEXT() { return "carousel-navigator-arrow-next"; }
-}
-
 class CarouselWrapper {
 	constructor() { 
 		this.carouselTimeoutsMap = { };
@@ -54,6 +31,7 @@ class CarouselWrapper {
 			let pauseOnHover = true;
 			let autoAdvanceTimeoutSeconds = 10;
 
+			
 			let match;
 			const regex = /(?<key>[a-z0-9-]+)=(?<value>[a-z0-9-]+)/gi
 			while ((match = regex.exec($element.text())) !== null) {
@@ -61,24 +39,12 @@ class CarouselWrapper {
 
 				try {
 					switch(key) {
-						case Attributes.DATA_SHOW_NAV: 
-							showNav = value === "true"; 
-							break;
-						case Attributes.DATA_SHOW_ARROWS: 
-							showArrows = value === "true"; 
-							break;
-						case Attributes.DATA_ENABLE_ZOOM: 
-							enableZoom = value === "true"; 
-							break;
-						case Attributes.DATA_AUTO_ADVANCE: 
-							autoAdvance = value === "true"; 
-							break;
-						case Attributes.DATA_AUTO_ADVANCE: 
-							pauseOnHover = value === "true"; 
-							break;
-						case Attributes.DATA_AUTO_ADVANCE_SPEED_SECONDS: 
-							autoAdvanceTimeoutSeconds = parseInt(value); 
-							break;
+						case "show-nav": 	showNav = value === "true"; break;
+						case "show-arrows": showArrows = value === "true"; break;
+						case "enable-zoom": enableZoom = value === "true"; break;
+						case "auto-advance": autoAdvance = value === "true"; break;
+						case "pause-on-hover": pauseOnHover = value === "true"; break;
+						case "auto-advance-speed-s": autoAdvanceTimeoutSeconds = parseInt(value); break;
 					}
 				} catch(e) {
 					console.log(e);
@@ -95,6 +61,30 @@ class CarouselWrapper {
 				pauseOnHover
 			);
 		});
+
+		// pause auto rotations when off screen
+		$(window).on("resize scroll", () => {
+			$(".custom-carousel").each((_, el) => {
+				const $el = $(el);
+				
+				const isHovered = $el.closest(".carousel-image-container")
+					.find(".zoom-target")
+					.toArray().some(el => $(el).attr("data-carousel-zoomer-hovered") === "true");
+
+				if(isHovered) {
+					return;
+				}
+				
+				const key = $el.attr("id");
+				const currentTimeout = this.carouselTimeoutsMap[key]?.timeout;
+				const inView = this.isElementCentered($el);
+				if(inView && !currentTimeout) {
+					this.resumeTimeout(key);
+				} else if(!inView) {
+					this.pauseTimeout(key);
+				}
+			})
+		})
 	}
 
 	isCarouselEnd = ($item) => $item.text().trim() === "%%CAROUSEL_END%%";
@@ -119,31 +109,23 @@ class CarouselWrapper {
 			);
 	}
 
-	initCarousel(
-		$root,
-		autoAdvance,
-		autoAdvanceTimeoutSeconds,
-		showNav,
-		showArrows,
-		enableZoom,
-		pauseOnHover
-	) {
+	initCarousel($root, autoAdvance, autoAdvanceTimeoutSeconds, showNav, showArrows, enableZoom, pauseOnHover) {
 		let imageTimeoutKey = crypto.randomUUID();
 		
 		// Init carousel stuff
 		$root.html("")
-			.addClass(Attributes.CLASS_CAROUSEL_ROOT)
+			.addClass("custom-carousel")
 			.attr("id", imageTimeoutKey)
-			.attr(Attributes.DATA_AUTO_ADVANCE, autoAdvance.toString())
-			.attr(Attributes.DATA_AUTO_ADVANCE_SPEED_SECONDS, autoAdvanceTimeoutSeconds.toString())
-			.attr(Attributes.DATA_SHOW_NAV, showNav.toString())
-			.attr(Attributes.DATA_SHOW_ARROWS, showArrows.toString());
+			.attr("data-auto-advance", autoAdvance.toString())
+			.attr("data-auto-advance-timeout-s", autoAdvanceTimeoutSeconds.toString())
+			.attr("data-show-nav", showNav.toString())
+			.attr("data-show-arrows", showArrows.toString());
 
-		const $navGroup = $("<div>").addClass(Attributes.CLASS_NAV_GROUP);
+		const $navGroup = $("<div>").addClass("carousel-nav-group");
 		const $imageContainer = $("<div>")
-			.addClass(Attributes.CLASS_IMAGE_CONTAINER)
-			.attr(Attributes.DATA_ENABLE_ZOOM, enableZoom.toString())
-			.attr(Attributes.DATA_PAUSE_ON_HOVER, pauseOnHover.toString());
+			.addClass("carousel-image-container")
+			.attr("data-enable-zoom", enableZoom.toString())
+			.attr("data-pause-on-hover", pauseOnHover.toString());
 		this.addPauseAutoAdvance($imageContainer, imageTimeoutKey);
 
 		// Gather all children between start and end markers
@@ -156,17 +138,15 @@ class CarouselWrapper {
 				const $img = $(img);
 				const currentIndex = navItemIdx;
 
-				const isFirst = (navItemIdx === 0).toString();
-
-				$img.addClass(Attributes.CLASS_ZOOM_TARGET)
-					.attr(Attributes.DATA_CAROUSEL_SELECTED, isFirst)
+				$img.addClass("zoom-target")
+					.attr("data-carousel-selected", navItemIdx === 0 ? "true" : "false")
 					.appendTo($imageContainer);
 
 				this.addImageMagnifierOnHover($img, imageTimeoutKey);
 
 				const $navItem = $("<div>")
-					.addClass(Attributes.CLASS_NAV_ITEM.replace(".",""))
-					.attr(Attributes.DATA_NAV_SELECTED, isFirst)
+					.addClass("nav-item")
+					.attr("data-nav-selected", navItemIdx === 0 ? "true" : "false")
 					.on("click", () => {
 						this.updateCarousel(imageTimeoutKey, currentIndex);
 					})
@@ -192,10 +172,7 @@ class CarouselWrapper {
 
 		// Prev button
 		const $prevArrow = $("<div>")
-			.addClass(`
-				${Attributes.CLASS_CAROUSEL_NAVIGATOR_ARROW} 
-				${Attributes.CLASS_CAROUSEL_NAVIGATOR_ARROW_PREV}
-			`)
+			.addClass("carousel-navigator-arrow carousel-navigator-arrow-prev")
 			.html(`
 				<span class="material-symbols-outlined" style="transform: rotate(180deg);">
 					arrow_forward_ios
@@ -213,10 +190,7 @@ class CarouselWrapper {
 
 		// Next button
 		const $nextArrow = $("<div>")
-			.addClass(`
-				${Attributes.CLASS_CAROUSEL_NAVIGATOR_ARROW} 
-				${Attributes.CLASS_CAROUSEL_NAVIGATOR_ARROW_NEXT}
-			`)
+			.addClass("carousel-navigator-arrow carousel-navigator-arrow-next")
 			.html('<span class="material-symbols-outlined">arrow_forward_ios</span>')
 			.on("click", () => {
 				const { currentIdx, items } = this.carouselTimeoutsMap[imageTimeoutKey]
@@ -230,19 +204,6 @@ class CarouselWrapper {
 
 		// start
 		this.updateCarousel(imageTimeoutKey, 0);
-
-		// pause / resume when on / off screen
-		$(window).on("resize scroll", () => {
-			const $el = this.carouselTimeoutsMap[imageTimeoutKey].$element;
-			const currentTimeout = this.carouselTimeoutsMap[imageTimeoutKey].timeout;
-			const inView = this.isElementCentered($el);
-
-			if (inView && !currentTimeout) {
-					this.resumeTimeout(imageTimeoutKey);
-			} else if (!inView) {
-					this.pauseTimeout(imageTimeoutKey);
-			}
-		});
 	}
 
 	updateCarousel(imageTimeoutKey, newIdx) {
@@ -254,20 +215,17 @@ class CarouselWrapper {
 
 		items.forEach(($el, idx) => {
 			const selectedStr = (idx === newIdx).toString();
-			$el.attr(Attributes.DATA_CAROUSEL_SELECTED, selectedStr);
-			$(navItems[idx]).attr(Attributes.DATA_NAV_SELECTED, selectedStr);
+			$el.attr("data-carousel-selected", selectedStr);
+			$(navItems[idx]).attr("data-nav-selected", selectedStr);
 		});
 		this.carouselTimeoutsMap[imageTimeoutKey].currentIdx = newIdx;
 
 		const timeoutObject = this.carouselTimeoutsMap[imageTimeoutKey];
-		const isHovered = timeoutObject.$root
-			.attr(Attributes.DATA_CAROUSEL_MAGNIFIER_HOVERED) === "true";
-
-		const autoAdvance = timeoutObject.$root
-			.attr(Attributes.DATA_AUTO_ADVANCE) === "true";
-
-		const autoAdvanceTimoutSeconds = timeoutObject.$root
-			.attr(Attributes.DATA_AUTO_ADVANCE_SPEED_SECONDS) || "10";
+		const isHovered = timeoutObject.$root.attr("data-carousel-zoomer-hovered") === "true";
+		const autoAdvance = timeoutObject.$root.attr("data-auto-advance") === "true";
+		const autoAdvanceTimoutSeconds = parseInt(
+			timeoutObject.$root.attr("data-auto-advance-timeout-s") || "10"
+		);
 
 		if(!isHovered && autoAdvance) {
 			this.carouselTimeoutsMap[imageTimeoutKey].timeout = setTimeout(() => {
@@ -277,7 +235,7 @@ class CarouselWrapper {
 				this.carouselTimeoutsMap[imageTimeoutKey].currentIdx = nextImgIdx;
 
 				this.updateCarousel(imageTimeoutKey, nextImgIdx)
-			}, parseInt(autoAdvanceTimoutSeconds) * 1000);
+			}, autoAdvanceTimoutSeconds * 1000);
 		}
 	}
 
@@ -300,28 +258,18 @@ class CarouselWrapper {
 	}
 
 	addPauseAutoAdvance($element, imageTimeoutKey) {
-		$element.attr(
-			Attributes.DATA_CAROUSEL_MAGNIFIER_HOVERED, 
-			"false"
-		);
+		$element.attr("data-carousel-zoomer-hovered", "false");
 
 		$element.on("mouseenter", () => {
-			$element.attr(
-				Attributes.DATA_CAROUSEL_MAGNIFIER_HOVERED, 
-				"true"
-			);
-
-			if($element.attr(Attributes.DATA_PAUSE_ON_HOVER) === "false") {
+			$element.attr("data-carousel-zoomer-hovered", "true");
+			if($element.attr("data-pause-on-hover") === "false") {
 				return;
 			}
 			this.pauseTimeout(imageTimeoutKey);
 		})
 		
 		$element.on("mouseleave", () => {
-			$element.attr(
-				Attributes.DATA_CAROUSEL_MAGNIFIER_HOVERED, 
-				"false"
-			);
+			$element.attr("data-carousel-zoomer-hovered", "false");
 
 			$element.css({
 				transformOrigin: "center center",
@@ -333,14 +281,11 @@ class CarouselWrapper {
 	}
 
 	addImageMagnifierOnHover($zoomerTarget, imageTimeoutKey) {
-		const $imageContainer = $zoomerTarget.closest(`.${Attributes.CLASS_IMAGE_CONTAINER}`);
+		const $imageContainer = $zoomerTarget.closest(".carousel-image-container");
 
 		$zoomerTarget.on("mousemove", (e) => {
-			const isHovered = $imageContainer
-				.attr(Attributes.DATA_CAROUSEL_MAGNIFIER_HOVERED) === "true";
-
-			const shouldZoom = $imageContainer
-				.attr(Attributes.DATA_ENABLE_ZOOM) === "true";
+			const isHovered = $imageContainer.attr("data-carousel-zoomer-hovered") === "true";
+			const shouldZoom = $imageContainer.attr("data-enable-zoom") === "true";
 
 			if (!isHovered || !shouldZoom) { 
 				return; 
@@ -357,10 +302,7 @@ class CarouselWrapper {
 		});
 
 		$zoomerTarget.on("mouseleave", () => {
-			$imageContainer.attr(
-				Attributes.DATA_CAROUSEL_MAGNIFIER_HOVERED, 
-				"false"
-			);
+			$imageContainer.attr("data-carousel-zoomer-hovered", "false");
 
 			$zoomerTarget.css({
 				transformOrigin: "center center",
