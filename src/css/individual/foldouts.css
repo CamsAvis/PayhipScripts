@@ -4,9 +4,8 @@
 }
 
 .foldout-header {
-	padding: 0.5rem 0 0.5rem 0;
+	padding-block: 0.5rem;
 	display: flex;
-	align-items: center;
 	position: relative;
 }
 
@@ -30,7 +29,7 @@
 	font-family: "Material Symbols Outlined"; /* or "Material Icons" */
 	content: ">";
 	content: '\e5e1';
-	margin-right: 8px;
+	margin-inline: 8px;
 	transition: transform 200ms;
 }
 
