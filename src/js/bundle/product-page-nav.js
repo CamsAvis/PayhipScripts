@@ -14,10 +14,9 @@ const initProductPageNav = () => {
 			didAddShortcuts = true;
 		}
 
-		const cleanedText = $element.text().replace("%%SHORTCUT_TARGET%%");
+		const cleanedText = $element.text().replace("%%SHORTCUT_TARGET%%", "");
 		const text = cleanedText
 			.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, "") // remove emojis
-			.replace("%%SHORTCUT_TARGET%%", "")
 			.trim()
 			.toLowerCase()
 			.replace(/\b\w/g, char => char.toUpperCase());
