@@ -10,11 +10,12 @@ const initProductPageNav = () => {
 
 		if (!$element.text().includes("%%SHORTCUT_TARGET%%")) {
 			return;
+		} else {
+			didAddShortcuts = true;
 		}
 
-		didAddShortcuts = true;
-
-		const text = $element.text()
+		const cleanedText = $element.text().replace("%%SHORTCUT_TARGET%%");
+		const text = cleanedText
 			.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, "") // remove emojis
 			.replace("%%SHORTCUT_TARGET%%", "")
 			.trim()
@@ -25,6 +26,7 @@ const initProductPageNav = () => {
 			return;
 		}
 
+		$element.text(cleanedText);
 		$element.attr("id", text)
 			.addClass("heading-link")
 			.on("click", function () {
