@@ -43,7 +43,7 @@
 	/*cubic-bezier(.14,.66,.28,.85);*/
 	--foldout-container-natural-height: 500vh;
 
-	margin-left: clamp(0, 4vw, 1.5rem);
+	margin-left: clamp(0px, 4vw, 1.5rem);
 	max-height: var(--foldout-container-natural-height);
 
 	overflow: hidden;
