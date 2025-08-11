@@ -456,16 +456,15 @@ const parseQuery = ($element) => {
 }
 
 const createFoldout = ($rootElement) => {
-		const FOLDOUT_TRANSITION_DURATION_MS = 500;
-
 		const query = parseQuery($rootElement);
 		const foldedOutByDefault = ('folded-out' in query) && (query['folded-out'] === "true");
-
+	
+		const FOLDOUT_TRANSITION_DURATION = (('duration' in query) && query['duration']) ?? "500ms";
 		// main container
 		const $foldoutContainer = $("<div>")
 			.addClass("foldout-container")
 			.attr("data-folded-out", foldedOutByDefault.toString())
-			.css('--anim-foldout-dura', `${FOLDOUT_TRANSITION_DURATION_MS}ms`);
+			.css('--anim-foldout-dura', FOLDOUT_TRANSITION_DURATION);
 
 		// header
 		const $foldoutHeader = $("<div>")
@@ -483,7 +482,7 @@ const createFoldout = ($rootElement) => {
 						$foldoutContainer.css({ pointerEvents: "all" });
 						$foldoutContainer.attr("data-folded-out", (!isFoldedOut).toString());
 						$foldoutContainer.removeClass(animClassName);
-					}, FOLDOUT_TRANSITION_DURATION_MS);
+					}, FOLDOUT_TRANSITION_DURATION);
 			});
 
 		// insert title
