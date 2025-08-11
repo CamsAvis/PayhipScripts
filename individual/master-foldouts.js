@@ -48,7 +48,7 @@ const createFoldout = ($rootElement) => {
 			$foldoutContainer.removeClass(animClassName).addClass(animClassName);
 
 			// add animation to foldout header ::before psuedo element
-			const animClassNameBefore = isFoldedOut ? "anim-foldout-in" : "anim-foldout-out";
+			const animClassNameBefore = isFoldedOut ? "anim-foldout-before-in" : "anim-foldout-before-out";
 			$header.removeClass(animClassNameBefore).addClass(animClassNameBefore);
 
 			// remove the class, restore pointer events, and update data attributes
