@@ -124,6 +124,7 @@ class CarouselWrapper {
 			.attr("data-pause-on-hover", pauseOnHover.toString());
 		this.addPauseAutoAdvance($imageContainer, imageTimeoutKey);
 
+		// i got way too lazy to make a better solution for this dude
 		if(!enableZoom && !pauseOnHover) {
 			$imageContainer.css({ pointerEvents: "none" });
 		}

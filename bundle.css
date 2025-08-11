@@ -403,11 +403,6 @@ h4 strong, h4 em {
 }
 
 
-.foldout-container {
-	overflow: auto;
-	transition: max-height 300ms;
-}
-
 .foldout-header {
 	padding-block: 0.5rem;
 	display: flex;
@@ -442,6 +437,13 @@ h4 strong, h4 em {
 	transform: rotate(90deg);
 }
 
+.foldout-container {
+	--anim-foldout-dura: 300ms;
+	--anim-foldout-curve: cubic-bezier(.68,0,.4,.99);
+
+	overflow: auto;
+	transition: max-height var(--anim-foldout-dura);
+}
 
 .foldout-container[data-folded-out='true'] {
 	max-height: 100vh;
@@ -450,6 +452,25 @@ h4 strong, h4 em {
 .foldout-container[data-folded-out='false'] {
 	max-height: 0;
 	overflow: hidden;
+}
+
+.anim-foldout-out {
+	animation: foldout-out var(--anim-foldout-dura) var(--anim-foldout-curve) forwards;
+}
+
+.anim-foldout-in {
+	animation: foldout-in var(--anim-foldout-dura) var(--anim-foldout-curve) reverse;
+}
+
+@keyframes foldout-out {
+	from {
+		max-height: 0;
+		overflow: hidden;
+	}
+	to {
+		max-height: 100vh;
+		overflow: auto;
+	}
 }
 
 
