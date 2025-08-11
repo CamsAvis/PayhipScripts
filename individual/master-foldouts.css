@@ -59,11 +59,11 @@
 }
 
 .anim-foldout-before-out {
-	animation: fooldout-out-before var(--anim-foldout-before-dura) var(--anim-foldout-curve) forwards;
+	animation: foldout-out-before var(--anim-foldout-before-dura) var(--anim-foldout-curve) forwards;
 }
 
 .anim-foldout-before-in {
-	animation: fooldout-in-before var(--anim-foldout-before-dura) var(--anim-foldout-curve) forwards;
+	animation: foldout-in-before var(--anim-foldout-before-dura) var(--anim-foldout-curve) forwards;
 }
 
 @keyframes foldout-out-before {
