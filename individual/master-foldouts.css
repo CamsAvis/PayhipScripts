@@ -33,11 +33,9 @@
 }
 
 .foldout-container {
-	--anim-foldout-dura: 300ms;
+	--anim-foldout-dura: 500ms;
 	--anim-foldout-curve: cubic-bezier(.68,0,.4,.99);
-
-	overflow: auto;
-	transition: max-height var(--anim-foldout-dura);
+	overflow: hidden;
 }
 
 .foldout-container[data-folded-out='true'] {
@@ -58,11 +56,15 @@
 }
 
 @keyframes foldout-out {
-	from {
+	0% {
 		max-height: 0;
 		overflow: hidden;
 	}
-	to {
+	99.9% {
+		overflow: hidden;
+		max-height: 99.9vh;
+	}
+	100% {
 		max-height: 100vh;
 		overflow: auto;
 	}
