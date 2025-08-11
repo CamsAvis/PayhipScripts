@@ -23,7 +23,7 @@
 .foldout-header::before {
 	--anim-foldout-dura: 500ms;
 
-	font-family: "Material Symbols Outlined"; /* or "Material Icons" */
+	font-family: "Material Symbols Outlined";
 	content: ">";
 	content: '\e5e1';
 	margin-inline: 8px;
@@ -37,7 +37,7 @@
 	--anim-foldout-dura: 500ms;
 	--anim-foldout-curve: cubic-bezier(.68,0,.4,.99);
 	margin-left: clamp(0, 4vw, 1.5rem);
-	
+
 	overflow: hidden;
 }
 
@@ -55,7 +55,7 @@
 }
 
 .anim-foldout-in {
-	animation: foldout-in var(--anim-foldout-dura) var(--anim-foldout-curve) reverse;
+	animation: foldout-in var(--anim-foldout-dura) var(--anim-foldout-curve) forwards;
 }
 
 .anim-foldout-before-out {
@@ -63,12 +63,17 @@
 }
 
 .anim-foldout-before-in {
-	animation: fooldout-out-before var(--anim-foldout-before-dura) var(--anim-foldout-curve) reverse;
+	animation: fooldout-in-before var(--anim-foldout-before-dura) var(--anim-foldout-curve) forwards;
 }
 
 @keyframes foldout-out-before {
 	from { transform: rotate(0deg); }
 	to { transform: rotate(90deg); }
+}
+
+@keyframes foldout-in-before {
+	from { transform: rotate(90deg); }
+	to { transform: rotate(0deg); }
 }
 
 @keyframes foldout-out {
@@ -83,5 +88,16 @@
 	100% {
 		max-height: 100vh;
 		overflow: auto;
+	}
+}
+
+@keyframes foldout-in {
+	from {
+		max-height: 100vh;
+		overflow: hidden;
+	}
+	to {
+		max-height: 0;
+		overflow: hidden;
 	}
 }
