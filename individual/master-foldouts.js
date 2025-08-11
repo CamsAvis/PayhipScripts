@@ -1,5 +1,6 @@
-const isStart = ($element) => $element.text().trim().match(/\%\%FOLDOUT_START.*\%\%/);
-const isEnd = ($element) => $element.text().trim().match(/\%\%FOLDOUT_END.*\%\%/);
+
+const isFoldoutStart = ($element) => $element.text().trim().match(/\%\%FOLDOUT_START.*\%\%/);
+const isFoldoutEnd = ($element) => $element.text().trim().match(/\%\%FOLDOUT_END.*\%\%/);
 
 const parseQuery = ($element) => {
 	let queryOutput = {}
@@ -14,6 +15,13 @@ const parseQuery = ($element) => {
 	return queryOutput;
 }
 
+
+function measureNaturalHeight($foldoutContainer) {
+    const natHeight = `${$foldoutContainer[0].offsetHeight}px`;
+    $foldoutContainer.css("--foldout-container-natural-height", natHeight);
+}
+
+
 const createFoldout = ($rootElement) => {
 	const query = parseQuery($rootElement);
 	const foldedOutByDefault = ('folded-out' in query) && (query['folded-out'] === "true");
@@ -27,9 +35,8 @@ const createFoldout = ($rootElement) => {
 
 	const $foldoutContainer = $("<div>")
 		.addClass("foldout-container")
-		.attr("data-folded-out", foldedOutByDefault.toString())
 		.css('--anim-foldout-dura', `${animDurationNumber}${animDurationUnit}`);
-
+	
 	// header
 	const $foldoutHeader = $("<div>")
 		.addClass("foldout-header")
@@ -41,22 +48,23 @@ const createFoldout = ($rootElement) => {
 			// toggle off header interactions
 			const $header = $(this);
 			const isFoldedOut = $header.attr("data-folded-out") === "true";
-			$header.css({ pointerEvents: "none" });
+			
+			$header
+				.css({ pointerEvents: "none" })
+				.attr("data-folded-out", (!isFoldedOut).toString());
 
 			// add animation to foldout container
 			const animClassName = isFoldedOut ? "anim-foldout-in" : "anim-foldout-out";
 			$foldoutContainer.removeClass(animClassName).addClass(animClassName);
 
 			// add animation to foldout header ::before psuedo element
-			const animClassNameBefore = isFoldedOut ? "anim-foldout-before-in" : "anim-foldout-before-out";
-			$header.removeClass(animClassNameBefore).addClass(animClassNameBefore);
+			// const animClassNameBefore = isFoldedOut ? "anim-foldout-before-in" : "anim-foldout-before-out";
+			// $header.removeClass(animClassNameBefore).addClass(animClassNameBefore);
 
 			// remove the class, restore pointer events, and update data attributes
 			setTimeout(() => {
-				$header
-					.css({ pointerEvents: "all" })
-					.attr("data-folded-out", (!isFoldedOut).toString())
-					.removeClass(animClassNameBefore);
+				$header.css({ pointerEvents: "all" });
+					// .removeClass(animClassNameBefore);
 
 				$foldoutContainer
 					.attr("data-folded-out", (!isFoldedOut).toString())
@@ -77,8 +85,8 @@ const createFoldout = ($rootElement) => {
 
 	// add all following children to the foldout container
 	let $current = $firstChildElement;
-	while ($current.length && !isEnd($current)) {
-		if (isStart($current)) {
+	while ($current.length && !isFoldoutEnd($current)) {
+		if (isFoldoutStart($current)) {
 			createFoldout($current);
 			continue;
 		}
@@ -88,17 +96,27 @@ const createFoldout = ($rootElement) => {
 		$current = $next;
 	}
 
-	if (isEnd($current)) {
+	if (isFoldoutEnd($current)) {
 		$current.remove();
 	}
+		
+	const natHeight = `${$foldoutContainer[0].offsetHeight + 200}px`;
+	$foldoutContainer.css("--foldout-container-natural-height", natHeight);
+	$foldoutContainer.attr("data-folded-out", foldedOutByDefault.toString());
 }
 
-$(document).ready(function () {
-	$(".product-description > *").each((_, element) => {
-		const $rootElement = $(element);
-		if (!isStart($rootElement)) {
-			return;
-		}
-		createFoldout($rootElement);
+
+if (document.body.id === "page-product") {
+	$(document).ready(() => {
+		setTimeout(() => {
+			$(".product-description > *").each((_, element) => {
+				const $rootElement = $(element);
+				if (!isFoldoutStart($rootElement)) {
+					return;
+				}
+	
+				createFoldout($rootElement);
+			});
+		}, 10);
 	});
-});
+}

@@ -1,4 +1,7 @@
 .foldout-header {
+	--anim-foldout-curve-return: cubic-bezier(.45,0,.26,1.02);
+	--anim-foldout-dura: 500ms;
+
 	padding-block: 0.5rem;
 	display: flex;
 	position: relative;
@@ -21,28 +24,38 @@
 }
 
 .foldout-header::before {
-	--anim-foldout-dura: 500ms;
-
 	font-family: "Material Symbols Outlined";
 	content: ">";
 	content: '\e5e1';
 	margin-inline: 8px;
+	
+	transition: transform calc(var(--anim-foldout-dura) / 2);
 }
 
-.foldout-header:has(+ .foldout-container[data-folded-out='true'])::before {
+.foldout-header[data-folded-out='true']::before {
 	transform: rotate(90deg);
 }
 
 .foldout-container {
 	--anim-foldout-dura: 500ms;
 	--anim-foldout-curve: cubic-bezier(.68,0,.4,.99);
+	--anim-foldout-curve-return: cubic-bezier(.68,0,.4,.99);
+	/*cubic-bezier(.14,.66,.28,.85);*/
+	--foldout-container-natural-height: 500vh;
+
 	margin-left: clamp(0, 4vw, 1.5rem);
+	max-height: var(--foldout-container-natural-height);
 
 	overflow: hidden;
 }
 
 .foldout-container[data-folded-out='true'] {
-	max-height: 100vh;
+	max-height: var(--foldout-container-natural-height);
+	overflow: auto;
+}
+
+.foldout-container[data-folded-out='true']::before {
+	transform: rotate(90deg);
 }
 
 .foldout-container[data-folded-out='false'] {
@@ -50,12 +63,17 @@
 	overflow: hidden;
 }
 
+.foldout-container[data-folded-out='false']::before {
+	transform: rotate(0deg);
+	transition: transform var(--anim-foldout-dura) var(--anim-foldout-curve);
+}
+
 .anim-foldout-out {
 	animation: foldout-out var(--anim-foldout-dura) var(--anim-foldout-curve) forwards;
 }
 
 .anim-foldout-in {
-	animation: foldout-in var(--anim-foldout-dura) var(--anim-foldout-curve) forwards;
+	animation: foldout-in var(--anim-foldout-dura) var(--anim-foldout-curve-return) forwards;
 }
 
 .anim-foldout-before-out {
@@ -63,7 +81,7 @@
 }
 
 .anim-foldout-before-in {
-	animation: foldout-in-before var(--anim-foldout-before-dura) var(--anim-foldout-curve) forwards;
+	animation: foldout-in-before var(--anim-foldout-before-dura) var(--anim-foldout-curve-return) forwards;
 }
 
 @keyframes foldout-out-before {
@@ -83,17 +101,17 @@
 	}
 	99.9999% {
 		overflow: hidden;
-		max-height: 99.9999vh;
+		max-height: var(--foldout-container-natural-height)
 	}
 	100% {
-		max-height: 100vh;
+		max-height: var(--foldout-container-natural-height);
 		overflow: auto;
 	}
 }
 
 @keyframes foldout-in {
 	from {
-		max-height: 100vh;
+		max-height: var(--foldout-container-natural-height);
 		overflow: hidden;
 	}
 	to {

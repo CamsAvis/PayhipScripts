@@ -318,7 +318,6 @@ class CarouselWrapper {
 	}
 }
 
-
 if (document.body.id === "page-product") {
 	$(document).ready(() => {
 		const carouselWrapper = new CarouselWrapper();
