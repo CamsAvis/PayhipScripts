@@ -142,6 +142,7 @@ class CarouselWrapper {
 					.attr("data-carousel-selected", navItemIdx === 0 ? "true" : "false")
 					.appendTo($imageContainer);
 
+
 				this.addImageMagnifierOnHover($img, imageTimeoutKey);
 
 				const $navItem = $("<div>")
@@ -156,6 +157,10 @@ class CarouselWrapper {
 				carouselTimeoutObject.navItems.push($navItem);
 
 				navItemIdx++;
+					
+				if(!enableZoom && !pauseOnHover) {
+					$img.css({ pointerEvents: "none" });
+				}
 			});
 
 			const $next = $current.next();
