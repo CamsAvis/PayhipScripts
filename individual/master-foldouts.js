@@ -15,71 +15,90 @@ const parseQuery = ($element) => {
 }
 
 const createFoldout = ($rootElement) => {
-		const query = parseQuery($rootElement);
-		const foldedOutByDefault = ('folded-out' in query) && (query['folded-out'] === "true");
-	
-		const FOLDOUT_TRANSITION_DURATION_STR = (('duration' in query) && query['duration']) ?? "500ms";
+	const query = parseQuery($rootElement);
+	const foldedOutByDefault = ('folded-out' in query) && (query['folded-out'] === "true");
 
-		const reResults = FOLDOUT_TRANSITION_DURATION_STR.match(/(?<time>[0-9]*)(?<unit>\w+)/);
-		const animDurationNumber = parseInt(reResults?.groups?.time || "500");
-		const animDurationUnit = reResults?.groups?.unit || "ms";
+	const FOLDOUT_TRANSITION_DURATION_STR = (('duration' in query) && query['duration']) ?? "500ms";
 
-		const $foldoutContainer = $("<div>")
-			.addClass("foldout-container")
-			.attr("data-folded-out", foldedOutByDefault.toString())
-			.css('--anim-foldout-dura', `${animDurationNumber}${animDurationUnit}`);
+	// extract time and unit
+	const reResults = FOLDOUT_TRANSITION_DURATION_STR.match(/(?<time>[0-9]+)(?<unit>\w+)/);
+	const animDurationNumber = parseInt(reResults?.groups?.time || "500");
+	const animDurationUnit = reResults?.groups?.unit || "ms";
 
-		// header
-		const $foldoutHeader = $("<div>")
-			.addClass("foldout-header")
-			.on("click", function () {
-					const isFoldedOut = $foldoutContainer.attr("data-folded-out") === "true";
-					const animClassName = isFoldedOut ? "anim-foldout-in" : "anim-foldout-out";
+	const $foldoutContainer = $("<div>")
+		.addClass("foldout-container")
+		.attr("data-folded-out", foldedOutByDefault.toString())
+		.css('--anim-foldout-dura', `${animDurationNumber}${animDurationUnit}`);
 
-					$foldoutContainer.css({ pointerEvents: "none" });
-					$foldoutContainer
-						.removeClass(animClassName)
-						.addClass(animClassName);
+	// header
+	const $foldoutHeader = $("<div>")
+		.addClass("foldout-header")
+		.css({
+			'--anim-foldout-dura': `${animDurationNumber}${animDurationUnit}`,
+			pointerEvents: "all"
+		})
+		.on("click", function () {
+			// toggle off header interactions
+			const $header = $(this);
+			const isFoldedOut = $header.attr("data-folded-out") === "true";
+			$header.css({ pointerEvents: "none" });
 
-					setTimeout(() => {
-						$foldoutContainer.css({ pointerEvents: "all" });
-						$foldoutContainer.attr("data-folded-out", (!isFoldedOut).toString());
-						$foldoutContainer.removeClass(animClassName);
-					}, animDurationNumber);
-			});
+			// add animation to foldout container
+			const animClassName = isFoldedOut ? "anim-foldout-in" : "anim-foldout-out";
+			$foldoutContainer.removeClass(animClassName).addClass(animClassName);
 
-		// insert title
-		const $titleElement = $rootElement.next();
-		const $firstChildElement = $titleElement.next();
-		$titleElement.appendTo($foldoutHeader);
+			// add animation to foldout header ::before psuedo element
+			const animClassNameBefore = isFoldedOut ? "anim-foldout-in" : "anim-foldout-out";
+			$header.removeClass(animClassNameBefore).addClass(animClassNameBefore);
 
-		$rootElement.html("").append(
-			$foldoutHeader, $foldoutContainer
-		)
+			// remove the class, restore pointer events, and update data attributes
+			setTimeout(() => {
+				$header
+					.css({ pointerEvents: "all" })
+					.attr("data-folded-out", (!isFoldedOut).toString())
+					.removeClass(animClassNameBefore);
 
-		let $current = $firstChildElement;
-		while ($current.length && !isEnd($current)) {
-			if(isStart($current)) {
-				createFoldout($current);
-				continue;
-			}
+				$foldoutContainer
+					.attr("data-folded-out", (!isFoldedOut).toString())
+					.removeClass(animClassName);
 
-			const $next = $current.next();
-			$current.appendTo($foldoutContainer);
-			$current = $next;
+			}, animDurationNumber);
+		});
+
+	// insert title
+	const $titleElement = $rootElement.next();
+	const $firstChildElement = $titleElement.next();
+	$titleElement.appendTo($foldoutHeader);
+
+	// add all to root
+	$rootElement.html("").append(
+		$foldoutHeader, $foldoutContainer
+	)
+
+	// add all following children to the foldout container
+	let $current = $firstChildElement;
+	while ($current.length && !isEnd($current)) {
+		if (isStart($current)) {
+			createFoldout($current);
+			continue;
 		}
 
-		if(isEnd($current)) {
-			$current.remove();
-		}
+		const $next = $current.next();
+		$current.appendTo($foldoutContainer);
+		$current = $next;
+	}
+
+	if (isEnd($current)) {
+		$current.remove();
+	}
 }
 
 $(document).ready(function () {
 	$(".product-description > *").each((_, element) => {
-			const $rootElement = $(element);
-			if (!isStart($rootElement)) {
-				return;
-			}
-			createFoldout($rootElement);
+		const $rootElement = $(element);
+		if (!isStart($rootElement)) {
+			return;
+		}
+		createFoldout($rootElement);
 	});
 });

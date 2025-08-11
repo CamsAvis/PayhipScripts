@@ -426,11 +426,12 @@ h4 strong, h4 em {
 }
 
 .foldout-header::before {
+	--anim-foldout-dura: 500ms;
+
 	font-family: "Material Symbols Outlined"; /* or "Material Icons" */
 	content: ">";
 	content: '\e5e1';
 	margin-inline: 8px;
-	transition: transform 200ms;
 }
 
 .foldout-header:has(+ .foldout-container[data-folded-out='true'])::before {
@@ -440,6 +441,8 @@ h4 strong, h4 em {
 .foldout-container {
 	--anim-foldout-dura: 500ms;
 	--anim-foldout-curve: cubic-bezier(.68,0,.4,.99);
+	margin-left: clamp(0, 4vw, 1.5rem);
+	
 	overflow: hidden;
 }
 
@@ -458,6 +461,19 @@ h4 strong, h4 em {
 
 .anim-foldout-in {
 	animation: foldout-in var(--anim-foldout-dura) var(--anim-foldout-curve) reverse;
+}
+
+.anim-foldout-before-out {
+	animation: fooldout-out-before var(--anim-foldout-before-dura) var(--anim-foldout-curve) forwards;
+}
+
+.anim-foldout-before-in {
+	animation: fooldout-out-before var(--anim-foldout-before-dura) var(--anim-foldout-curve) reverse;
+}
+
+@keyframes foldout-out-before {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(90deg); }
 }
 
 @keyframes foldout-out {
