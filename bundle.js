@@ -713,6 +713,7 @@ const initProductPageNav = () => {
 	});
 
 	if(didAddShortcuts) {
+		$productDescription.prepend($productDescriptionNavigation);
 		$productDescription.prepend($productDescriptionHeadingText);
 	}
 }
