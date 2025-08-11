@@ -124,6 +124,10 @@ class CarouselWrapper {
 			.attr("data-pause-on-hover", pauseOnHover.toString());
 		this.addPauseAutoAdvance($imageContainer, imageTimeoutKey);
 
+		if(!enableZoom && !pauseOnHover) {
+			$imageContainer.css({ pointerEvents: "none" });
+		}
+
 		// Gather all children between start and end markers
 		let $current = $($root).next();
 		let navItemIdx = 0;
