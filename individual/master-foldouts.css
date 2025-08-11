@@ -60,9 +60,9 @@
 		max-height: 0;
 		overflow: hidden;
 	}
-	99.9% {
+	99.9999% {
 		overflow: hidden;
-		max-height: 99.9vh;
+		max-height: 99.9999vh;
 	}
 	100% {
 		max-height: 100vh;
