@@ -15,20 +15,34 @@ const parseQuery = ($element) => {
 }
 
 const createFoldout = ($rootElement) => {
+		const FOLDOUT_TIMEOUT_MS = 200;
+
 		const query = parseQuery($rootElement);
 		const foldedOutByDefault = ('folded-out' in query) && (query['folded-out'] === "true");
 
 		// main container
 		const $foldoutContainer = $("<div>")
 			.addClass("foldout-container")
-			.attr("data-folded-out", foldedOutByDefault.toString());
+			.attr("data-folded-out", foldedOutByDefault.toString())
+			.css('--anim-foldout-dura', `${FOLDOUT_TIMEOUT_MS}ms`);
 
 		// header
 		const $foldoutHeader = $("<div>")
 			.addClass("foldout-header")
 			.on("click", function () {
-				const isFoldedOut = $foldoutContainer.attr("data-folded-out") === "true";
-				$foldoutContainer.attr("data-folded-out", (!isFoldedOut).toString());
+					const isFoldedOut = $foldoutContainer.attr("data-folded-out") === "true";
+					const animClassName = isFoldedOut ? "anim-foldout-in" : "anim-foldout-out";
+
+					$foldoutContainer.css({ pointerEvents: "none" });
+					$foldoutContainer
+						.removeClass(animClassName)
+						.addClass(animClassName);
+
+					setTimeout(() => {
+						$foldoutContainer.css({ pointerEvents: "all" });
+						$foldoutContainer.attr("data-folded-out", (!isFoldedOut).toString());
+						$foldoutContainer.removeClass(animClassName);
+					}, FOLDOUT_TIMEOUT_MS);
 			});
 
 		// insert title
