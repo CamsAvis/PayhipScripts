@@ -572,7 +572,7 @@ const createFoldout = ($rootElement) => {
 		$current.remove();
 	}
 		
-	const natHeight = `${$foldoutContainer[0].offsetHeight + 200}px`;
+	const natHeight = `${$foldoutContainer[0].offsetHeight + 400}px`;
 	$foldoutContainer.css("--foldout-container-natural-height", natHeight);
 	$foldoutContainer.attr("data-folded-out", foldedOutByDefault.toString());
 }
@@ -589,7 +589,7 @@ if (document.body.id === "page-product") {
 	
 				createFoldout($rootElement);
 			});
-		}, 10);
+		}, 100);
 	});
 }
 
