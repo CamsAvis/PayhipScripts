@@ -24,7 +24,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // Discord button
     const button = document.createElement('div');
     button.id = 'discord-button';
-    button.title = 'Join our Discord!';
+    button.title = 'Join my Discord!';
 
     const img = document.createElement('img');
     img.src = 'https://img.icons8.com/?size=100&id=SAZw8WuWnQea&format=png&color=000000';
