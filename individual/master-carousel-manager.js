@@ -165,7 +165,35 @@ class CarouselWrapper {
 
 		let carouselTimeoutObject = new CarouselTimeout([], [], 0, undefined, $root);
 		while ($current.length && !this.isCarouselEnd($current)) {
-			$current.find("img").each((_, img) => this.addCarousel($(img), $imageContainer, $navGroup, imageTimeoutKey, navItemIdx));
+			$current.find("img").each((_, img) => {
+				const $img = $(img);
+				const currentIndex = navItemIdx;
+
+				$img.addClass("zoom-target")
+					.attr("data-carousel-selected", navItemIdx === 0 ? "true" : "false")
+					.appendTo($imageContainer);
+
+				if($img.is("img")) {
+					this.addImageMagnifierOnHover($img, imageTimeoutKey);
+				}
+
+				const $navItem = $("<div>")
+					.addClass("nav-item")
+					.attr("data-nav-selected", navItemIdx === 0 ? "true" : "false")
+					.on("click", () => {
+						this.updateCarousel(imageTimeoutKey, currentIndex);
+					})
+					.appendTo($navGroup);
+
+				carouselTimeoutObject.items.push($img);
+				carouselTimeoutObject.navItems.push($navItem);
+
+				navItemIdx++;
+					
+				if(!enableZoom && !pauseOnHover) {
+					$img.css({ pointerEvents: "none" });
+				}
+			});
 			// $current.find("iframe").each((_, iframe) => addCarousel($iframe, $navGroup, imageTimeoutKey, navItemIdx));
 
 			const $next = $current.next();
