@@ -217,7 +217,7 @@ class CarouselWrapper {
 			);
 	}
 
-	addCarousel($img, $navGroup, imageTimeoutKey, navItemIdx)  {
+	addCarousel($img, $imageContainer, $navGroup, imageTimeoutKey, navItemIdx)  {
 			// const $img = $(img);
 			const currentIndex = navItemIdx;
 
@@ -277,7 +277,7 @@ class CarouselWrapper {
 
 		let carouselTimeoutObject = new CarouselTimeout([], [], 0, undefined, $root);
 		while ($current.length && !this.isCarouselEnd($current)) {
-			$current.find("img").each((_, img) => this.addCarousel($(img), $navGroup, imageTimeoutKey, navItemIdx));
+			$current.find("img").each((_, img) => this.addCarousel($(img), $imageContainer, $navGroup, imageTimeoutKey, navItemIdx));
 			// $current.find("iframe").each((_, iframe) => addCarousel($iframe, $navGroup, imageTimeoutKey, navItemIdx));
 
 			const $next = $current.next();
