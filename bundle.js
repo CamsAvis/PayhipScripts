@@ -24,7 +24,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // Discord button
     const button = document.createElement('div');
     button.id = 'discord-button';
-    button.title = 'Join our Discord!';
+    button.title = 'Join my Discord!';
 
     const img = document.createElement('img');
     img.src = 'https://img.icons8.com/?size=100&id=SAZw8WuWnQea&format=png&color=000000';
@@ -217,6 +217,36 @@ class CarouselWrapper {
 			);
 	}
 
+	addCarousel($img, $navGroup, imageTimeoutKey, navItemIdx)  {
+			// const $img = $(img);
+			const currentIndex = navItemIdx;
+
+			$img.addClass("zoom-target")
+				.attr("data-carousel-selected", navItemIdx === 0 ? "true" : "false")
+				.appendTo($imageContainer);
+
+			if($img.is("img")) {
+				this.addImageMagnifierOnHover($img, imageTimeoutKey);
+			}
+
+			const $navItem = $("<div>")
+				.addClass("nav-item")
+				.attr("data-nav-selected", navItemIdx === 0 ? "true" : "false")
+				.on("click", () => {
+					this.updateCarousel(imageTimeoutKey, currentIndex);
+				})
+				.appendTo($navGroup);
+
+			carouselTimeoutObject.items.push($img);
+			carouselTimeoutObject.navItems.push($navItem);
+
+			navItemIdx++;
+				
+			if(!enableZoom && !pauseOnHover) {
+				$img.css({ pointerEvents: "none" });
+			}
+		}
+
 	initCarousel($root, autoAdvance, autoAdvanceTimeoutSeconds, showNav, showArrows, enableZoom, pauseOnHover) {
 		let imageTimeoutKey = crypto.randomUUID();
 		
@@ -247,34 +277,8 @@ class CarouselWrapper {
 
 		let carouselTimeoutObject = new CarouselTimeout([], [], 0, undefined, $root);
 		while ($current.length && !this.isCarouselEnd($current)) {
-			$current.find("img").each((_, img) => {
-				const $img = $(img);
-				const currentIndex = navItemIdx;
-
-				$img.addClass("zoom-target")
-					.attr("data-carousel-selected", navItemIdx === 0 ? "true" : "false")
-					.appendTo($imageContainer);
-
-
-				this.addImageMagnifierOnHover($img, imageTimeoutKey);
-
-				const $navItem = $("<div>")
-					.addClass("nav-item")
-					.attr("data-nav-selected", navItemIdx === 0 ? "true" : "false")
-					.on("click", () => {
-						this.updateCarousel(imageTimeoutKey, currentIndex);
-					})
-					.appendTo($navGroup);
-
-				carouselTimeoutObject.items.push($img);
-				carouselTimeoutObject.navItems.push($navItem);
-
-				navItemIdx++;
-					
-				if(!enableZoom && !pauseOnHover) {
-					$img.css({ pointerEvents: "none" });
-				}
-			});
+			$current.find("img").each((_, img) => addCarousel($(img), $navGroup, imageTimeoutKey, navItemIdx));
+			// $current.find("iframe").each((_, iframe) => addCarousel($iframe, $navGroup, imageTimeoutKey, navItemIdx));
 
 			const $next = $current.next();
 			$current.remove();

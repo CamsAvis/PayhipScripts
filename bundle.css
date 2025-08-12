@@ -246,6 +246,7 @@ h3 strong, h3 em,
 h4 strong, h4 em {
   letter-spacing: 0.1rem !important;
   font-weight: 400 !important;
+	text-transform: none !important;
 }
 
 
