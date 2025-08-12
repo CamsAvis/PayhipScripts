@@ -106,7 +106,7 @@ class CarouselWrapper {
 	}
 
 	addCarousel($img, $navGroup, imageTimeoutKey, navItemIdx)  {
-			const $img = $(img);
+			// const $img = $(img);
 			const currentIndex = navItemIdx;
 
 			$img.addClass("zoom-target")
@@ -166,7 +166,7 @@ class CarouselWrapper {
 		let carouselTimeoutObject = new CarouselTimeout([], [], 0, undefined, $root);
 		while ($current.length && !this.isCarouselEnd($current)) {
 			$current.find("img").each((_, img) => addCarousel($(img), $navGroup, imageTimeoutKey, navItemIdx));
-			$current.find("iframe").each((_, iframe) => addCarousel($(iframe), $navGroup, imageTimeoutKey, navItemIdx));
+			// $current.find("iframe").each((_, iframe) => addCarousel($iframe, $navGroup, imageTimeoutKey, navItemIdx));
 
 			const $next = $current.next();
 			$current.remove();
