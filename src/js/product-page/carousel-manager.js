@@ -1,4 +1,5 @@
 const $ = require('jquery');
+const { parseQuery } = require("../util");
 
 class CarouselTimeout {
 	constructor(items, navItems, currentIdx, timeout, $root) {
