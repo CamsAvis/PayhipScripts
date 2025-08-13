@@ -2,3 +2,6 @@ combined_*
 githubactionstoken.txt
 old.html
 pages
+package-lock.json
+**/node_modules
+dist

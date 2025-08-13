@@ -1,3 +1,5 @@
+const $ = require('jquery');
+
 const initProductPageNav = () => {
 	const $productDescription = $(document).find("div.product-description");
 
@@ -52,6 +54,6 @@ const initProductPageNav = () => {
 	}
 }
 
-if (document.body.id === "page-product") {
-	$(document).ready(initProductPageNav);
+module.exports = {
+	initProductPageNav, initProductPageNav
 }

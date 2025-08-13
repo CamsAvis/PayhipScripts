@@ -1,3 +1,4 @@
+const $ = require('jquery');
 
 const isFoldoutStart = ($element) => $element.text().trim().match(/\%\%FOLDOUT_START.*\%\%/);
 const isFoldoutEnd = ($element) => $element.text().trim().match(/\%\%FOLDOUT_END.*\%\%/);
@@ -105,18 +106,6 @@ const createFoldout = ($rootElement) => {
 	$foldoutContainer.attr("data-folded-out", foldedOutByDefault.toString());
 }
 
-
-if (document.body.id === "page-product") {
-	$(document).ready(() => {
-		setTimeout(() => {
-			$(".product-description > *").each((_, element) => {
-				const $rootElement = $(element);
-				if (!isFoldoutStart($rootElement)) {
-					return;
-				}
-	
-				createFoldout($rootElement);
-			});
-		}, 100);
-	});
+module.exports = {
+	isFoldoutStart, isFoldoutEnd, createFoldout
 }

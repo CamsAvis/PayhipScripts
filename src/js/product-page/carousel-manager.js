@@ -1,3 +1,5 @@
+const $ = require('jquery');
+
 class CarouselTimeout {
 	constructor(items, navItems, currentIdx, timeout, $root) {
 		this.items = items;
@@ -24,32 +26,14 @@ class CarouselWrapper {
 				return;
 			}
 
-			let autoAdvance = true;
-			let showNav = true;
-			let showArrows = true;
-			let enableZoom = true;
-			let pauseOnHover = true;
-			let autoAdvanceTimeoutSeconds = 10;
+			const args = parseQuery($element);
 
-			
-			let match;
-			const regex = /(?<key>[a-z0-9-]+)=(?<value>[a-z0-9-]+)/gi
-			while ((match = regex.exec($element.text())) !== null) {
-				const { key, value } = match.groups;
-
-				try {
-					switch(key) {
-						case "show-nav": 	showNav = value === "true"; break;
-						case "show-arrows": showArrows = value === "true"; break;
-						case "enable-zoom": enableZoom = value === "true"; break;
-						case "auto-advance": autoAdvance = value === "true"; break;
-						case "pause-on-hover": pauseOnHover = value === "true"; break;
-						case "auto-advance-speed-s": autoAdvanceTimeoutSeconds = parseInt(value); break;
-					}
-				} catch(e) {
-					console.log(e);
-				}
-			}
+			let autoAdvance = args["auto-advance"] === "true";
+			let showNav = args["show-nav"] === "true";
+			let showArrows = args["show-arrows"] === "true";
+			let enableZoom = args["enable-zoom"] === "true";
+			let pauseOnHover = args["pause-on-hover"] === "true";
+			let autoAdvanceTimeoutSeconds = parseInt(args["auto-advance-speed-s"] ?? "10") || 10;
 
 			this.initCarousel(
 				$element,
@@ -356,3 +340,5 @@ if (document.body.id === "page-product") {
 		carouselWrapper.initCarousels();
 	});
 }
+
+module.exports = { CarouselTimeout, CarouselWrapper }
