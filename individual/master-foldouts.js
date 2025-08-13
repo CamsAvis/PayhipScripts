@@ -100,7 +100,7 @@ const createFoldout = ($rootElement) => {
 		$current.remove();
 	}
 	
-	const natHeight = `${$foldoutContainer[0].offsetHeight * 1.25}px`;
+	const natHeight = "100vh";//`${$foldoutContainer[0].offsetHeight * 1.25}px`;
 	$foldoutContainer.css("--foldout-container-natural-height", natHeight);
 	$foldoutContainer.attr("data-folded-out", foldedOutByDefault.toString());
 }
