@@ -1,33 +1,19 @@
 const $ = require('jquery');
+const { parseQuery } = require("../util");
 
 const isFoldoutStart = ($element) => $element.text().trim().match(/\%\%FOLDOUT_START.*\%\%/);
 const isFoldoutEnd = ($element) => $element.text().trim().match(/\%\%FOLDOUT_END.*\%\%/);
-
-const parseQuery = ($element) => {
-	let queryOutput = {}
-
-	let match;
-	const regex = /(?<key>[a-z0-9-]+)=(?<value>[a-z0-9-]+)/gi
-	while ((match = regex.exec($element.text())) !== null) {
-		const { key, value } = match.groups;
-		queryOutput[key] = value;
-	}
-
-	return queryOutput;
-}
-
 
 function measureNaturalHeight($foldoutContainer) {
     const natHeight = `${$foldoutContainer[0].offsetHeight}px`;
     $foldoutContainer.css("--foldout-container-natural-height", natHeight);
 }
 
-
 const createFoldout = ($rootElement) => {
-	const query = parseQuery($rootElement);
+	const query = parseQuery($rootElement.text());
 	const foldedOutByDefault = ('folded-out' in query) && (query['folded-out'] === "true");
 
-	const FOLDOUT_TRANSITION_DURATION_STR = (('duration' in query) && query['duration']) ?? "500ms";
+	const FOLDOUT_TRANSITION_DURATION_STR = (('duration' in query) && query['duration']) || "500ms";
 
 	// extract time and unit
 	const reResults = FOLDOUT_TRANSITION_DURATION_STR.match(/(?<time>[0-9]+)(?<unit>\w+)/);

@@ -1,5 +1,5 @@
 const $ = require('jquery');
-const { parseQuery } = require("../util");
+const { parseQuery, extractArg } = require("../util");
 
 class CarouselTimeout {
 	constructor(items, navItems, currentIdx, timeout, $root) {
@@ -27,14 +27,33 @@ class CarouselWrapper {
 				return;
 			}
 
-			const args = parseQuery($element);
+			let autoAdvance = true;
+			let showNav = true;
+			let showArrows = true;
+			let enableZoom = true;
+			let pauseOnHover = true;
+			let autoAdvanceTimeoutSeconds = 10;
 
-			let autoAdvance = args["auto-advance"] === "true";
-			let showNav = args["show-nav"] === "true";
-			let showArrows = args["show-arrows"] === "true";
-			let enableZoom = args["enable-zoom"] === "true";
-			let pauseOnHover = args["pause-on-hover"] === "true";
-			let autoAdvanceTimeoutSeconds = parseInt(args["auto-advance-speed-s"] ?? "10") || 10;
+			let match;
+			const regex = /(?<key>[a-z0-9-]+)=(?<value>[a-z0-9-]+)/gi
+			while ((match = regex.exec($element.text())) !== null) {
+				const { key, value } = match.groups;
+
+				console.log(match.groups);
+
+				try {
+					switch(key) {
+						case "show-nav": 	showNav = value === "true"; break;
+						case "show-arrows": showArrows = value === "true"; break;
+						case "enable-zoom": enableZoom = value === "true"; break;
+						case "auto-advance": autoAdvance = value === "true"; break;
+						case "pause-on-hover": pauseOnHover = value === "true"; break;
+						case "auto-advance-speed-s": autoAdvanceTimeoutSeconds = parseInt(value); break;
+					}
+				} catch(e) {
+					console.log(e);
+				}
+			}
 
 			this.initCarousel(
 				$element,
@@ -93,6 +112,7 @@ class CarouselWrapper {
 	addCarousel($img, $imageContainer, $navGroup, imageTimeoutKey, navItemIdx)  {
 			// const $img = $(img);
 			const currentIndex = navItemIdx;
+			const carouselTimeoutObject = this.carouselTimeoutsMap[imageTimeoutKey];
 
 			$img.addClass("zoom-target")
 				.attr("data-carousel-selected", navItemIdx === 0 ? "true" : "false")
@@ -273,7 +293,7 @@ class CarouselWrapper {
 
 	resumeTimeout(imageTimeoutKey) {
 		const timeoutObject = this.carouselTimeoutsMap[imageTimeoutKey];
-		if (timeoutObject?.timeout !== undefined) {
+		if (timeoutObject?.timeout === undefined) {
 			return;
 		}
 

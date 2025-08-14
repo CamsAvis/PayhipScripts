@@ -46,26 +46,28 @@ const setupProductDescriptionPageElements = () => {
 
 	// foldouts
 	$productDescriptionChildren.each((_, element) => {
+		const $element = $(element);
 		if (!isFoldoutStart($element)) {
 			return;
 		}
 		createFoldout($element);
-	});
 
-	// page shortcuts
-	const elementTypes = [ "p", "h1", "h2", "h3", "h4", "span", "strong", "em", "italic", "underline" ]
-	$productDescriptionChildren
-		.find(elementTypes.join(", "))
-		.each((_, element) => {
-			setupProductPageCustomLinks($(element));
-		});
+		// setupProductPageCustomLinks($element);
+	});
 
 	// navigation
 	initProductPageNav();
+	
+
+	// page shortcuts
+	// $productDescriptionChildren
+	// 	.each((_, element) => {
+	// 		setupProductPageCustomLinks($(element));
+	// 	});
 }
 
 $(function() {
-	const pathName = window.localStorage.pathname;
+	const pathName = window.location.pathname;
 
 	// individual pages //
 	if (pathName === "/") {

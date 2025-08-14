@@ -1,21 +1,23 @@
-const parseQuery = require("../util");
+const { parseQuery } = require("../util");
 
-const setupProductPageCustomLinks = async($element) => {
-	const elementText = $element.text();
+const setupProductPageCustomLinks = ($element) => {
+	let elementHTML = $element.html().toString();
 
-	const regexResult = elementText.match(/%%link=.*%%/g);
-	if(!regexResult){
-		return;
+	const regex = /\%\%link\?(.*?)\%\%/g;
+
+	let match;
+	while((match = regex.exec(elementHTML)) !== null) {
+		const queryString = match[1];
+		const result = parseQuery(queryString);
+
+		if(!result.html || !result.target) continue;
+
+		elementHTML = elementHTML.replace(
+			match[0], `<a href="${result.link}" class="injected-link">${result.html}</a>`
+		)
 	}
 
-	for(const result of regexResult) {
-		const { name, link } = parseQuery(result);
-		if(!name || !link) { 
-			continue; 
-		}
-
-		
-	}
+	$element.html(elementHTML);
 }
 
 module.exports = {
